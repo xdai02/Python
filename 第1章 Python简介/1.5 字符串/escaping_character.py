@@ -1,0 +1,1 @@
+print("全球最大同性交友网站\n\"https://github.com\"")
