@@ -5,7 +5,8 @@ HEADER = ["位置", "经度", "维度"]
 
 def main():
     # 如果不使用newline，那么每行记录之间就会多出一个空行
-    with open(file="location.csv", mode="w", newline="", encoding="utf-8") as file:
+    with open(file="location.csv", mode="w", 
+              newline="", encoding="utf-8") as file:
         csv_writer = csv.writer(file)       # 创建csv写入对象
         csv_writer.writerow(HEADER)         # 写入头部信息
         for i in range(1, 11):

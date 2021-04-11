@@ -3,7 +3,6 @@ import jieba
 PATH = "西游记.txt"     # 文件路径
 
 def main():
-    print()
     word_frequence = {}     # 词频表
 
     # 打开文件
