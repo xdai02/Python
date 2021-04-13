@@ -30,7 +30,9 @@ class MainForm:
         for language in self.languages:
             self.language_listbox.insert("end", language)
         # 双击选中
-        self.language_listbox.bind("<Double-Button-1>", self.add_handler)
+        self.language_listbox.bind(
+            "<Double-Button-1>", self.add_handler
+        )
         self.language_listbox.grid(row=1, column=0)
     
     def dst_list(self):
@@ -38,8 +40,7 @@ class MainForm:
             已选区列表
         """
         self.dst_label = tkinter.Label(
-            self.root,
-            text="擅长的编程语言",
+            self.root, text="擅长的编程语言",
             bg="#223011", fg="#fff",
             font=("微软雅黑", 9)
         )
@@ -54,10 +55,8 @@ class MainForm:
             设置按钮
         """
         self.add_btn = tkinter.Button(
-            self.root,
-            text="添加 >>",
-            fg="#000",
-            font=("微软雅黑", 9)
+            self.root, text="添加 >>",
+            fg="#000", font=("微软雅黑", 9)
         )
         self.add_btn.bind("<Button-1>", self.add_handler)
         self.add_btn.grid(row=1, column=1)
@@ -68,13 +67,17 @@ class MainForm:
         """
         # 获取全部被选中的数据索引
         for index in self.language_listbox.curselection():
-            self.selected_listbox.insert("end", self.language_listbox.get(index))
+            self.selected_listbox.insert(
+                "end", self.language_listbox.get(index)
+            )
         # 索引在每一次删除之后都会动态改变
         while True:
             # 有被选中的项
             if self.language_listbox.curselection():
                 # 删除当前项
-                self.language_listbox.delete(self.language_listbox.curselection()[0])
+                self.language_listbox.delete(
+                    self.language_listbox.curselection()[0]
+                )
             else:
                 break
 

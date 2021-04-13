@@ -12,8 +12,7 @@ class MainFrom:
             font=("微软雅黑", 14)
         )
         text = tkinter.Text(
-            self.root,
-            width=20, height=2,
+            self.root, width=20, height=2,
             font=("微软雅黑", 14)
         )
         text.insert("current", "输入用户名")

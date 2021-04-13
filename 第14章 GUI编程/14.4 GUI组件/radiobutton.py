@@ -9,8 +9,7 @@ class MainForm:
         self.sex = [("男", 0), ("女", 1)]
 
         self.label = tkinter.Label(
-            self.root,
-            text="选择性别：",
+            self.root, text="选择性别：",
             font=("微软雅黑", 14)
         )
         self.label.grid(row=0, column=0)
@@ -18,9 +17,8 @@ class MainForm:
         pos = 1
         for title, index in self.sex:
             radio = tkinter.Radiobutton(
-                self.root,
+                self.root, font=("微软雅黑", 14)
                 text=title, value=index,
-                font=("微软雅黑", 14)
             )
             radio.grid(row=0, column=pos)
             pos += 1

@@ -11,8 +11,7 @@ class MainFrom:
         self.root.geometry("500x200")
 
         self.text = tkinter.Text(
-            self.root,
-            width=500, height=2,
+            self.root, width=500, height=2,
             font=("微软雅黑", 20)
         )
         # 提示信息
@@ -30,9 +29,8 @@ class MainFrom:
         self.content = tkinter.StringVar()   # 修改标签文字
         
         self.label = tkinter.Label(
-            self.root,
+            self.root, width=200, height=200,
             textvariable=self.content,
-            width=200, height=200,
             bg="#223011", fg="#ffffff",
             font=("微软雅黑", 20)
         )

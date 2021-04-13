@@ -19,8 +19,7 @@ class MainFrom:
         self.content = tkinter.StringVar()
         # 单行输入
         self.entry = tkinter.Entry(
-            self.in_frame,
-            width=14,
+            self.in_frame, width=14,
             font=("微软雅黑", 20),
             textvariable=self.content
         )
@@ -43,8 +42,7 @@ class MainFrom:
                     tkinter.Button(
                         self.btn_frame,
                         text=button[4*row+col],
-                        fg="black",
-                        width=3,
+                        fg="black", width=3,
                         font=("微软雅黑", 20),
                     )
                 )
