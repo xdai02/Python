@@ -2,11 +2,6 @@ import random
 import cProfile
 
 def bubble_sort(list):
-    """
-        冒泡排序
-        Args:
-            list (list): 待排序列表
-    """
     n = len(list)
     for i in range(n):
         for j in range(n-i-1):
