@@ -1,7 +1,7 @@
 import csv
 import random
 
-HEADER = ["位置", "经度", "维度"]
+HEADER = ["Location", "Longitude", "Latitude"]
 
 def main():
     # 如果不使用newline，那么每行记录之间就会多出一个空行
@@ -12,7 +12,7 @@ def main():
         for i in range(1, 11):
             longitude = round(random.random() * 180, 3)   # [0, 180)
             latitude = round(random.random() * 90, 3)     # [0, 90)
-            csv_writer.writerow(["位置%d" % i, longitude, latitude])
+            csv_writer.writerow(["loc-%d" % i, longitude, latitude])
 
 if __name__ == "__main__":
     main()

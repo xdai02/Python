@@ -4012,6 +4012,1567 @@ cProfile.run("bubble_sort(lst)")
 
 ## 9.1 正则表达式
 
+**正则表达式（Regular Expression）**
+
+正则表达式是一种利用特殊符号实现的字符串处理操作，正则的主要围绕着字符串的拆分、替换、匹配的实现支持。现在基本主流的编程语言都有正则的支持。
+
+Python需要引入`re`模块使用正则，`re`模块中提供了一些基本的匹配、过滤、搜索、拆分等操作的函数。
+
+正则表达式最常见的一项功能就是进行字符串的匹配，在进行匹配的时候可以使用正则标记符号或者使用完整的字符串来匹配。
+
+---
+
+【代码】从头匹配
+
+```python
+import re
+
+def main():
+    # 匹配成功返回Match类对象
+    print("从头匹配：%s" % re.match("Hello", "Hello World"))
+    print("不匹配：%s" % re.match("World", "Hello World"))
+    # re.I / re.IGNORECASE表示忽略大小写比较
+    print("忽略大小写：%s" % re.match("HELLO", "Hello World", re.I))
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+从头匹配：<re.Match object; span=(0, 5), match='Hello'>
+不匹配：None
+忽略大小写：<re.Match object; span=(0, 5), match='Hello'>
+```
+
+---
+
+`match()`只能从头匹配，如果需要匹配任意位置上的字符串信息，就可以通过`search()`完成匹配。
+
+---
+
+【代码】任意位置匹配
+
+```python
+import re
+
+def main():
+    print("任意位置匹配：%s" % re.search(
+            "python", "https://www.python.org/"))
+    print("忽略大小写：%s" % re.search(
+            "PYTHON", "https://www.python.org/", re.I))
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+任意位置匹配：<re.Match object; span=(12, 18), match='python'>
+忽略大小写：<re.Match object; span=(12, 18), match='python'>
+```
+
+---
+
+【代码】使用与不使用正则表达式的区别
+
+```python
+import re
+
+"""
+    验证一个字符串是否是一个合法的账号
+    规则：
+        1. 纯数字组成
+        2. 不能以0开头
+        3. 长度[6, 11]
+"""
+
+def validate_account(account):
+    # 1. 纯数字组成
+    if not account.isnumeric():
+        return False
+    
+    # 2. 不能以0开头
+    if account.startswith("0"):
+        return False
+    
+    # 3. 长度[6, 11]
+    if len(account) < 6 or len(account) > 11:
+        return False
+    
+    return True
+
+def validate_account_with_regex(account):
+    # 第1位数字为[1-9]，后面[0-9]可重复5-10次
+    return re.match("[1-9]\\d{5,10}", account) != None
+
+def main():
+    # 不使用正则表达式
+    print(validate_account("2513276112"))
+    print(validate_account("012.3"))
+
+    # 使用正则表达式
+    print(validate_account_with_regex("h3ll0"))
+    print(validate_account_with_regex("28368346"))
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+True
+False
+False
+True
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 9.2 正则匹配
+
+**匹配规则**
+
+正则表达式的匹配规则是逐个字符进行匹配，判断是否和正则表达式中定义的规则一致。
+
+| 元字符 | 意义                                                         |
+| :----: | ------------------------------------------------------------ |
+|   ^    | 匹配一个字符串的开头。                                       |
+|   $    | 匹配一个字符串的结尾。                                       |
+|   []   | 匹配一位字符。例如：`[abc]`表示这一位字符可以是a或b或c。`[a-z]`表示这一位字符可以是[a, z]范围内的任意字符。`[a-zABC]`表示这一位字符可以是[a, z]范围内的任意字符，或者A或B或C。`[a-zA-Z]`表示这一位字符可以是任意的大小写字母。`[^abc]`表示这一位字符可以是除了a、b、c以外的任意字符。 |
+|   \    | 转义字符。使得某些特殊字符成为普通字符，可以进行规则的指定。使得某些普通字符变得具有特殊含义。由于正则表达式需要写在一个字符串中，而字符串中的`\`也是一个转义字符，因此需要对`\`再进行转义。 |
+|   \d   | 匹配所有的数字，等同于`[0-9]`。                              |
+|   \D   | 匹配所有的非数字，等同于`[^0-9]`。                           |
+|   \w   | 匹配所有的单词字符，等同于`[a-zA-Z0-9_]`。                   |
+|   \W   | 匹配所有的非单词字符，等同于`[^a-zA-Z0-9_]`。                |
+|   .    | 通配符，可以匹配一个任意的字符。                             |
+|   +    | 前面的一位或者一组字符，连续出现了一次或多次。               |
+|   ?    | 前面的一位或者一组字符，连续出现了一次或零次。               |
+|   *    | 前面的一位或者一组字符，连续出现了零次、一次或多次。         |
+|   {}   | 对前面的一位或者一组字符出现次数的精准匹配。`{m}`表示前面的一位或者一组字符连续出现了m次。`{m,}`表示前面的一位或者一组字符连续出现了至少m次。`{m,n}`表示前面的一位或者一组字符连续出现了至少m次，最多n次。 |
+|   ()   | 分组，把某些连续的字符视为一个整体对待。                     |
+|   \|   | 作用于整体或者是一个分组，表示匹配的内容可以是任意的一个部分。`abc|123`表示可以是abc，也可以是123。 |
+
+---
+
+【代码】验证合法性
+
+```python
+import re
+
+def main():
+    # 1. 验证QQ账号：长度5-11，首位不为0
+    print(re.match("[1-9]\\d{4,10}", "2513276112"))
+
+    # 2. 验证QQ邮箱：QQ号码@qq.com
+    print(re.match("[1-9]\\d{4,10}@qq\\.com", "2513276112@qq.com"))
+
+    # 3. 验证手机号
+    print(re.match("1[356789]\\d{9}", "13671712345"))
+
+    # 4. 验证固定电话：区号（3-4位）-电话号码（8位）
+    print(re.match("\\d{3,4}-\\d{8}", "021-55031234"))
+
+    # 验证126或163邮箱：邮箱名（4-12位有效字符）@126/163.com
+    print(re.match("\\w{4,12}@(126|163)\\.com", "admin123@163.com"))
+    
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+<re.Match object; span=(0, 10), match='2513276112'>
+<re.Match object; span=(0, 17), match='2513276112@qq.com'>
+<re.Match object; span=(0, 11), match='13671712345'>
+<re.Match object; span=(0, 12), match='021-55031234'>
+<re.Match object; span=(0, 16), match='admin123@163.com'>
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+# 第10章 文件操作
+
+## 10.1 文件操作
+
+计算机除了拥有计算的能力之外，一定要有数据的存储能力，而对于数据的存储一般就可以通过文件的形式来完成。在Python中直接提供有文件的`I/O (Input/Output)`处理函数操作，利用这些函数可以方便地实现读取和写入。
+
+open()函数的功能是进行文件的打开，在进行文件打开的时候如果不设置任何的模式类型，则默认为`r（只读模式）`。
+
+```python
+def open(
+    file, mode='r', buffering=None, encoding=None,
+    errors=None, newline=None, closefd=True
+)
+```
+
+| 模式 | 描述                                           |
+| :--: | ---------------------------------------------- |
+|  r   | 使用只读模式打开文件，此为默认模式             |
+|  w   | 写模式，如果文件存在则覆盖，文件不存在则创建   |
+|  x   | 写模式，新建一个文件，如果该文件已存在则会报错 |
+|  a   | 内容追加模式                                   |
+|  b   | 二进制模式                                     |
+|  t   | 文本模式（默认）                               |
+|  +   | 打开一个文件进行更新（可读可写）               |
+
+如果以只读的模式打开文件，并且文件路径不存在的话，就会出现`FileNotFoundError`的错误信息。
+
+---
+
+【代码】文件操作
+
+```python
+def main():
+    file = open(file="data.txt", mode="w")
+    print("文件名称：%s" % file.name)
+    print("访问模式：%s" % file.mode)
+    print("文件状态：%s" % file.closed)
+    print("关闭文件...")
+    file.close()
+    print("文件状态：%s" % file.closed)
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+文件名称：data.txt
+访问模式：w
+文件状态：False
+关闭文件...
+文件状态：True
+```
+
+---
+
+
+
+**文件读写**
+
+当使用`open()`打开一个文件之后，接下来可以使用创建的文件对象进行读写操作。
+
+| 方法                                      | 描述                                                         |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| def close(self)                           | 关闭文件资源                                                 |
+| def fileno(self)                          | 获取文件描述符，返回内容为：0（标准输入stdin）、1（标准输出stdout）、2（标准错误stderr）、其它数字（映射打开文件的地址） |
+| def flush(self)                           | 强制刷新缓冲区                                               |
+| def read(self, n: int = -1)               | 数据读取，默认读取全部内容，也可以设置读取个数               |
+| def readlines(self, hint: int = -1)       | 读取所有数据行，并以列表的形式返回                           |
+| def readline(self, limit: int = -1)       | 读取每行数据（`\n`为结尾），也可以设置读取个数               |
+| def truncate(self, size: int = None)      | 文件截取                                                     |
+| def writable(self)                        | 判断文件是否可以写入                                         |
+| def write(self, s: AnyStr)                | 文件写入                                                     |
+| def writelines(self, lines, List[AnyStr]) | 写入一组数据                                                 |
+
+既然所有的文件对象最终都需要被开发者关闭，那么可以结合`with`语句实现自动的关闭处理。通过`with`实现所有资源对象的连接和释放是在Python中编写资源操作的重要技术手段，通过这样的操作可以极大地减少和优化代码结构。
+
+使用读模式打开文件后，可以使用循环读取每一行的数据内容。Python在进行文件读取操作的时候也可以进一步简化操作。文件对象本身是可以迭代的，在迭代的时候是以换行转义字符`\n`为主进行分割，每次迭代就读取到一行数据内容。
+
+---
+
+【代码】读取文件
+
+- data.txt
+
+```
+小灰	16
+小白	17
+小黄	21
+```
+
+- read_file.py
+
+```python
+def main():
+    with open(file="data.txt", mode="r", encoding="utf-8") as file:
+        for line in file:
+            print(line, end='')
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+小灰	16
+小白	17
+小黄	21
+```
+
+---
+
+【代码】写入文件
+
+```python
+def main():
+    with open(file="data.txt", mode="w", encoding="utf-8") as file:
+        info = {"小灰": 16, "小白": 17, "小黄": 21}
+        for name, age in info.items():
+            file.write("%s\t%d\n" % (name, age))
+
+if __name__ == "__main__":
+    main()
+```
+
+> 【data.txt】文件内容
+
+```
+小灰	16
+小白	17
+小黄	21
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 10.2 文件缓冲
+
+**文件缓冲**
+
+在使用`open()`创建一个文件对象的时候，默认情况下是不会启用缓冲的。在`open()`中提供的`buffering`参数描述的就是文件处理缓冲的定义，在进行文件写入的时候利用缓冲可以避免频繁的I/O资源占用。
+
+![](./img/C10/10-2/1.png)
+
+开启缓冲可以提高写入效率，`buffering`参数设置有3种类型：
+
+1. 全缓冲（`buffering > 1`）：当标准I/O缓存被填满后才会进行真正I/O操作，全缓冲的典型代表就是对磁盘文件的读写操作。
+2. 行缓冲（`buffering = 1`）：在I/O操作中遇见换行符时才执行真正的I/O操作，例如在使用网络聊天工具时所编辑的文字在没有发送前是不会进行I/O操作的。
+3. 不缓冲（`buffering = 0`）：直接进行终端设备的I/O操作，数据不经过缓冲保存。
+
+如果想要观察到行缓冲的使用特点，就不能直接使用`with`语句，因为`with`最后会执行`close()`的关闭操作，而一旦关闭，则缓冲的内容会全部进行输出。
+
+使用`flush()`方法进行缓冲区的强制清空，一旦强制清空之后，缓冲区的内容将全部输出。每次使用`close()`方法关闭文件流的时候默认情况下也会调用`flush()`方法进行缓冲区的清空处理。
+
+---
+
+【代码】文件缓冲
+
+```python
+import os
+
+def main():
+    file = open(file="data.txt", mode="w", encoding="utf-8", buffering=1)
+    file.write("This is a test.")
+    os.system("pause")  # 程序暂停
+    file.flush()        # 强制清空缓冲区
+    os.system("pause")  # 程序暂停
+    file.close()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 【data.txt】文件内容
+
+```
+This is a test.
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 10.3 os模块
+
+**os模块**
+
+`os (operating system)`模块是Python用于与操作系统进行交互的一个操作模块，这个模块提供有大量与系统相关的处理函数，开发者可以直接通过Python程序进行操作系统的功能调用。
+
+| 方法                               | 描述                                                         |
+| ---------------------------------- | ------------------------------------------------------------ |
+| getcwd()                           | 获取当前的工作目录                                           |
+| chdir(path)                        | 修改工作目录                                                 |
+| system()                           | 执行操作系统命令                                             |
+| popen(cmd, mode="r", buffering=-1) | 开启一个命令通道，参数`cmd`表示要执行的程序命令；`mode`表示操作权限模式（`r/w`）；`buffering`表示设置缓冲大小，0表示无缓冲、1表示行缓冲、大于1表示全缓冲 |
+| symlink(src, dst)                  | 创建软链接                                                   |
+| link(src, dst)                     | 创建硬链接                                                   |
+
+
+
+**os.path子模块**
+
+`os.path`是`os`模块之中的一个子模块，该子模块的核心作用在于进行路径处理操作。Python的程序代码本身是强调跨平台的，既然要进行跨平台的开发，尤其是在I/O路径的处理上就特别要引起注意。在Windows系统下路径分隔符使用的是`\`，而在Linux系统下使用的路径分隔符是`/`。所以在进行程序编写的时候就必须考虑到不同平台的设计问题。
+
+使用`os.path`模块中提供的一系列函数可以针对给定的路径进行拆分处理以及判断和取得数据信息。
+
+Python需要考虑不同操作系统的跨平台的特点，所以对于访问路径需要进行适当的变更，根据不同的操作系统使用不同的路径分隔符。如果每一次都判断操作系统就过于繁琐了，可以直接使用`os.path`中提供的变量来完成。
+
+| 变量   | 描述                                           |
+| ------ | ---------------------------------------------- |
+| curdir | 表示当前文件夹`.`，一般可以省略                |
+| pardir | 上一层文件夹`..`                               |
+| sep    | 获取系统路径分隔符号，Windows为`\`，Linux为`/` |
+| extsep | 获取文件名称和后缀之间的间隔符号`.`            |
+
+不同操作系统之间对于文件的后缀和名称的分隔符是固定的，都是用`.`来完成，所以是否使用`extsep`区别不大。以上区别最大的就是`os.path.sep`。
+
+---
+
+【代码】获取路径信息
+
+```python
+import os
+
+PATH = "第10章 文件操作" + os.sep + "10.3 os模块" + os.sep + "data.txt"
+
+def main():
+    # 路径存在
+    if os.path.exists(PATH):
+        print("绝对路径：%s" % os.path.abspath(PATH))
+        print("文件名称：%s" % os.path.basename(PATH))
+        print("文件大小：%s" % os.path.getsize(PATH))
+        print("当前路径是否为文件：%s" % os.path.isfile(PATH))
+        print("当前路径是否为目录：%s" % os.path.isdir(PATH))
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+绝对路径：C:\Users\25132\Desktop\Python\第10章 文件操作\10.3 os模块\data.txt
+文件名称：data.txt
+文件大小：0
+当前路径是否为文件：True
+当前路径是否为目录：False
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 10.4 csv模块
+
+**csv文件**
+
+CSV （Comma-Separated Values，逗号分隔值/字符分隔值）是一种文件的格式，在该类型的文件里面一般会保存多个数据信息的内容，但是每一个数据信息一定都有各自的组成部分，用这样的文件进行数据采集内容的记录。CSV文件是跟人工智能和数据分析有直接联系的一种数据存储文件。
+
+CSV是一种以纯文件方式进行数据记录的存储格式，在CSV文件内容使用不同的数据行记录数据的内容，每行数据使用特定的符号（一般是逗号）进行数据项的拆分，这样就形成了一种相对简单且通用的数据格式。在实际开发中利用CSV数据格式可以方便实现大数据系统中对于数据采集结果的信息记录，也可以方便进行数据文件的传输，同时CSV文件格式也可以被Excel工具所读取。
+
+CSV文件是可以通过Excel工具打开的，当一个CSV文件被创建之后，在Windows系统中会自动和Excel软件进行关联。
+
+
+
+**csv读写操作**
+
+在Python中直接提供有`csv`模块，利用这个模块可以方便地实现数据的写入和读取操作，在CSV文件内容一般对于不同的数据项都要使用特定的分隔符（一般使用`,`）。除了数据之外，在CSV文件内容还可以设置文件标题。
+
+---
+
+【代码】写入csv文件
+
+```python
+import csv
+import random
+
+HEADER = ["Location", "Longitude", "Latitude"]
+
+def main():
+    # 如果不使用newline，那么每行记录之间就会多出一个空行
+    with open(file="location.csv", mode="w", 
+              newline="", encoding="utf-8") as file:
+        csv_writer = csv.writer(file)       # 创建csv写入对象
+        csv_writer.writerow(HEADER)         # 写入头部信息
+        for i in range(1, 11):
+            longitude = round(random.random() * 180, 3)   # [0, 180)
+            latitude = round(random.random() * 90, 3)     # [0, 90)
+            csv_writer.writerow(["loc-%d" % i, longitude, latitude])
+
+if __name__ == "__main__":
+    main()
+```
+
+> 【location.csv】文件内容
+
+```
+Location,Longitude,Latitude
+loc-1,176.165,35.458
+loc-2,12.729,56.247
+loc-3,6.605,45.14
+loc-4,15.123,53.435
+loc-5,131.984,11.927
+loc-6,155.038,35.681
+loc-7,98.772,15.125
+loc-8,70.991,30.328
+loc-9,152.967,30.372
+loc-10,96.362,76.798
+```
+
+---
+
+【代码】读取csv文件
+
+```python
+import csv
+
+def main():
+    with open(file="location.csv", mode="r", 
+              newline="", encoding="utf-8") as file:
+        csv_reader = csv.reader(file)   # 创建csv读取对象
+        header = next(csv_reader)       # 读取标题行
+        print(header)
+        for row in csv_reader:
+            print(row)
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+['Location', 'Longitude', 'Latitude']
+['loc-1', '176.165', '35.458']
+['loc-2', '12.729', '56.247']
+['loc-3', '6.605', '45.14']
+['loc-4', '15.123', '53.435']
+['loc-5', '131.984', '11.927']
+['loc-6', '155.038', '35.681']
+['loc-7', '98.772', '15.125']
+['loc-8', '70.991', '30.328']
+['loc-9', '152.967', '30.372']
+['loc-10', '96.362', '76.798']
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+# 第11章 并发编程
+
+## 11.1 多进程简介
+
+**进程（Process）**
+
+进程指的是一个具有一定独立功能的程序关于某个数据集合的一次运行活动。进程是系统进行资源分配和调度运行的基本单位。
+
+进程实体中包含三个组成部分：
+
+1. 程序
+2. 数据
+3. PCB（Process Control Block，进程控制块）
+
+
+
+**并发编程（Concurrent）**
+
+并发编程是一种有效提高操作系统（服务器）性能的技术手段，现代的操作系统之中最为重要的代表就是并发性，例如现在的CPU都属于多核CPU。
+
+早期的DOS操作系统有一个非常重要的特征：一旦系统沾染了病毒，那么所有的程序就无法直接执行了。因为传统的DOS系统属于单进程模型，在同一个时间段上只能运行一个程序，病毒程序运行了，其它程序自然就无法运行。
+
+后来到了Windows操作系统，即便有病毒，也可以正常执行。这采用的是多进程的编程模型，同一时间段上可以同时运行多个程序。
+
+![](./img/C11/11-1/1.png)
+
+只要打开Windows的任务管理器，就可以直接清楚发现所有正在执行的并行进程。
+
+<img src="./img/C11/11-1/2.png" style="zoom:80%;" />
+
+在早期的硬件系统之中由于没有多核CPU的设计，利用时间片的`轮转算法（Round Robin）`，保证在同一个时间段可以同时执行多个进行，但是在某一个时间点上只允许执行一个进程，可以实现资源的切换。
+
+---
+
+【代码】获取当前CPU内核数量
+
+```python
+import multiprocessing
+
+print("CPU内核数量：%d" % multiprocessing.cpu_count())
+```
+
+> 运行结果
+
+```
+CPU内核数量：12
+```
+
+---
+
+![](./img/C11/11-1/3.png)
+
+服务器的硬件性能是有限的，但是对于大部分的程序来讲都属于过剩的状态。于是如果按照传统的单进程模式来运行程序，所有的硬件资源几乎都会被浪费。
+
+任何一个进程都包含各自独立的数据，也就是说不同进程之间的数据是不能直接互相访问的，可以通过其它技术进行访问，例如`管道`。
+
+
+
+**进程状态（Process State）**
+
+所有的进程从其创建到销毁都有各自的生命周期，进程要经过如下几个阶段：
+
+```mermaid
+stateDiagram
+	[*] --> 创建CREATE
+	创建CREATE --> 就绪READY: 许可
+	就绪READY --> 执行EXECUTE: CPU调度
+	执行EXECUTE --> 终止TERMINATE: 释放
+	执行EXECUTE --> 就绪READY: 时间片执行完
+	执行EXECUTE --> 阻塞BLOCK: 产生阻塞事件
+	阻塞BLOCK --> 就绪READY: 接触阻塞
+	 终止TERMINATE --> [*]
+```
+
+1. 创建状态：系统已经为其分配了PCB（可以获取进程的而信息），但是所需要执行的进程的上下文环境（context）还未分配，所以这个时候的进程还无法被调度。
+2. 就绪状态：该进程已经分配到除CPU之外的全部资源，并等待CPU调度。
+3. 执行状态：进程已获得CPU资源，开始正常提供服务。
+4. 阻塞状态：所有的进程不可能一直抢占CPU，依据资源调度的算法，每一个进程运行一段时间之后，都需要交出当前的CPU资源，给其它进程执行。
+5. 终止状态：某一个进程达到了自然终止的状态，或者进行了强制性的停止，那么进程将进入到终止状态，进程将不再被执行。
+
+<div style="page-break-after: always;"></div>
+
+## 11.2 Process类
+
+**Process类**
+
+在进行多进程开发的时候可以使用`multiprocessing`模块进行多进程的编写，这个模块内容提供有一个`Process`类，利用这个类可以进行多进程的定义。
+
+| 名称                                                         | 类型 | 描述                                                         |
+| ------------------------------------------------------------ | :--: | ------------------------------------------------------------ |
+| pid                                                          | 属性 | 获取进程ID                                                   |
+| name                                                         | 属性 | 获取进程名称                                                 |
+| def __init__([group [, target [, name [, args [, kwargs, [, daemon]]]]]]) | 构造 | 创建一个执行进程，参数group表示分组定义；target表示进程处理对象（代替run()方法）；name表示进程名称，若不设置则自动分配一个名称；args表示进程处理对象所需要的执行参数；kwargs表示调用对象字典；daemon表示是否设置为后台进程 |
+| start(self)                                                  | 方法 | 进程启动，进入进程调度队列                                   |
+| run(self)                                                    | 方法 | 进程处理（不指定target时起效）                               |
+
+所有的Python程序执行都是通过主进程开始的，所有通过`Process`定义的进程都属于子进程。
+
+---
+
+【代码】创建多进程
+
+```python
+import multiprocessing
+
+def worker():
+    """
+        进程处理函数
+    """
+    print("【进程】id：%d，名称：%s" % (
+        multiprocessing.current_process().pid,
+        multiprocessing.current_process().name))
+
+def main():
+    print("【主进程】id：%d，名称：%s" % (
+        multiprocessing.current_process().pid,
+        multiprocessing.current_process().name))
+    
+    # 创建3个进程
+    for i in range(3):
+        process = multiprocessing.Process(target=worker, name="进程%d" % i)
+        process.start()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【主进程】id：4476，名称：MainProcess
+【进程】id：14216，名称：进程0
+【进程】id：1424，名称：进程1
+【进程】id：16636，名称：进程2
+```
+
+---
+
+
+
+**进程控制**
+
+在多进程编程中，所有的进程都会按照既定的代码顺序执行，但是某些进程有可能需要强制执行，或者由于某些问题需要被中断，那么就可以利用`Process`类中提供的方法进行控制。
+
+| 方法                | 描述             |
+| ------------------- | ---------------- |
+| terminate(self)     | 关闭进程         |
+| is_alive(self)      | 判断进程是否存活 |
+| join(self, timeout) | 进程强制执行     |
+
+所有进程启动后，多个进程进入进程阻塞队列之中依次进行执行，那么这个时候某一个进程是不可能强占CPU的，但是通过`join()`可以强制执行进程。如果子进程占用的时间较长，其它的进程也需要进行等待，当子进程全部执行完毕之后就会继续执行主进程的操作。
+
+所有的进程还可以进程中断处理，一般都会中断存活的进程，所以中断前需要对进程状态进行判断。但是从实际开发来讲，很少会出现强制性的霸占或者中断，否则有可能造成数据的丢失。
+
+<div style="page-break-after: always;"></div>
+
+## 11.3 psutil模块
+
+**psutil模块**
+
+`psutil`是一个进程管理的第三方模块，该模块可以跨平台（Linux、UNIX、MaxOS、Windows都支持）地进行进程管理，可以极大地简化不同系统中的进程处理操作。
+
+---
+
+【代码】获取全部进程信息
+
+```python
+import psutil
+
+def main():
+    # 获取全部进程
+    for process in psutil.process_iter():
+        print("【进程】id：%d，名称：%s，创建时间：%s" % (
+            process.pid, process.name, 
+            process.create_time()))
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+除了与进程有关的操作之外，`psutil`模块也提供了系统硬件的内容获取。
+
+---
+
+【代码】获取系统硬件信息
+
+```python
+import psutil
+
+def main():
+    # CPU信息
+    print("【CPU】物理数量：%d" % psutil.cpu_count(logical=False))
+    print("【CPU】逻辑数量：%d" % psutil.cpu_count(logical=True))
+    print("【CPU】用户用时：%f" % psutil.cpu_times().user)
+    print("【CPU】系统用时：%f" % psutil.cpu_times().system)
+    print("【CPU】空闲时间：%f" % psutil.cpu_times().idle)
+
+    # 磁盘信息
+    print("【磁盘】全部磁盘信息：%s" % psutil.disk_partitions())
+    print("【磁盘】D盘使用率：%s" % str(psutil.disk_usage("D:")))   # 默认为C盘
+    print("【磁盘】IO使用率：%s" % str(psutil.disk_io_counters()))
+
+    # 网络信息
+    print("【网络】数据交换信息：%s" % str(psutil.net_io_counters()))
+    print("【网络】接口信息：%s" % str(psutil.net_if_addrs()))
+    print("【网络】接口状态：%s" % str(psutil.net_if_stats()))
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 11.4 Pipe进程管道
+
+**Pipe进程通讯管道**
+
+进程是程序运行的基本单位，每一个程序内部都有属于自己的存储数据和程序单元，每一个进程都是完全独立的，彼此之前不能直接进行访问。但是可以通过一个特定的管道实现I/O。
+
+![](./img/C11/11-4/1.png)
+
+---
+
+【代码】创建进程通讯管道
+
+```python
+import multiprocessing
+
+def send_data(pipe, data):
+    """
+        往管道发送数据
+        Args:
+            pipe (Pipe): 管道
+            data (str): 发送的数据
+    """
+    pipe.send(data)
+    print("【进程%d】发送数据：%s" % (
+        multiprocessing.current_process().pid,
+        data
+    ))
+
+def recv_data(pipe):
+    """
+        从管道接收数据
+        Args:
+            pipe (Pipe): 管道
+    """
+    print("【进程%d】接收数据：%s" % (
+        multiprocessing.current_process().pid, 
+        pipe.recv()
+    ))
+
+def main():
+    # 管道分为发送端和接收端
+    send_end, recv_end = multiprocessing.Pipe()
+    # 创建两个子进程，将管道传递到对应的处理函数
+    sender = multiprocessing.Process(target=send_data, 
+                                    args=(send_end, "Hello!"))
+    receiver = multiprocessing.Process(target=recv_data, 
+                                    args=(recv_end,))
+    sender.start()
+    receiver.start()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【进程11664】发送数据：Hello!
+【进程1032】接收数据：Hello!
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 11.5 进程队列
+
+**进程队列**
+
+不同的进程彼此之间可以利用管道实现数据的发送和接收，但是如果发送的数据过多并且接收处理缓慢的时候，这种情况下就需要引入队列的形式来进行缓冲的操作。
+
+![](./img/C11/11-5/1.png)
+
+`multiprocessing.Queue`是多进程编程中提供的进程队列结构，该队列采用`FIFO`的形式实现不同进程间的数据通讯，这样可以保证多个数据可以按序实现发送与接收处理。
+
+| 方法                                     | 描述                                                         |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| def __init__(self, maxsize=0, *, ctx)    | 开辟队列，并设置队列保存的最大长度                           |
+| put(self, obj, block=True, timeout=None) | 插入数据到队列，block为队列满时的阻塞配置（默认为True），timeout为阻塞超时时间（单位：秒） |
+| get(self, block=True, timeout=None)      | 从队列获取数据，block为队列空时的阻塞配置（默认为True），timeout为阻塞超时时间（单位：秒） |
+| qsize(self)                              | 获取队列保存数据个数                                         |
+| empty(self)                              | 是否为空队列                                                 |
+| full(self)                               | 是否为满队列                                                 |
+
+---
+
+【代码】进程队列
+
+```python
+import multiprocessing
+import time
+
+def produce(queue):
+    """
+        生产数据
+        Args:
+            queue (Queue): 进程队列
+    """
+    # 生产3条数据
+    for item in range(3):
+        time.sleep(2)
+        data = "data-%d" % item
+        print("【%s】生产数据：%s" % (
+            multiprocessing.current_process().name,
+            data
+        ))
+        queue.put(data)
+
+def consume(queue):
+    """
+        消费数据
+        Args:
+            queue (Queue): 进程队列
+    """
+    while True:     # 持续消费
+        print("【%s】消费数据：%s" % (
+            multiprocessing.current_process().name,
+            queue.get()
+        ))
+
+def main():
+    queue = multiprocessing.Queue()
+    producer = multiprocessing.Process(
+                target=produce, name="Producer", args=(queue,))
+    consumer = multiprocessing.Process(
+                target=consume, name="Consumer", args=(queue,))
+    producer.start()
+    consumer.start()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【Producer】生产数据：data-0
+【Consumer】消费数据：data-0
+【Producer】生产数据：data-1
+【Consumer】消费数据：data-1
+【Producer】生产数据：data-2
+【Consumer】消费数据：data-2
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 11.6 进程通讯
+
+**进程通讯**
+
+在整个操作系统之中每一个进程都有自己独立的数据存储单元，也就是说不同进程之间无法直接实现数据共享。通过管道流可以实现进程之间的数据共享，相当于打通了不同进程之间的限制。但是不同的进程操作同一个资源就必须考虑数据同步的问题。
+
+要理解同步概念，首先要清楚进程不同步所带来的的问题。
+
+---
+
+【代码】售票操作（Bug版本）
+
+```python
+import multiprocessing
+import time
+
+def sell_ticket(dict):
+    while True:     # 持续售票
+        # 获取当前剩余票数
+        num = dict.get("ticket")
+        
+        if num > 0:         # 如果还有票剩余
+            time.sleep(1)   # 模拟网络延迟
+            num -= 1        # 票数减1
+            print("【售票员%d】售票成功，剩余票数：%d" % (
+                multiprocessing.current_process().pid,
+                num
+            ))
+            dict.update({"ticket":num})     # 更新票数
+        else:                # 已经没有票了
+            break
+
+def main():
+    # 创建共享数据对象
+    manager = multiprocessing.Manager()
+    # 创建一个可以被多个进程共享的字典对象
+    ticket_dict = manager.dict(ticket=5)   # 默认有5张票
+
+    # 创建多个售票进程
+    sellers = [
+        multiprocessing.Process(
+            target=sell_ticket, args=(ticket_dict,)) 
+        for _ in range(5)
+    ]
+
+    for seller in sellers:
+        seller.start()
+    for seller in sellers:
+        seller.join()   # 进程强制执行
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【售票员9732】售票成功，剩余票数：4
+【售票员1640】售票成功，剩余票数：4
+【售票员5976】售票成功，剩余票数：4
+【售票员8048】售票成功，剩余票数：4
+【售票员10516】售票成功，剩余票数：4
+【售票员9732】售票成功，剩余票数：3
+【售票员1640】售票成功，剩余票数：3
+【售票员5976】售票成功，剩余票数：3
+【售票员8048】售票成功，剩余票数：3
+【售票员10516】售票成功，剩余票数：3
+【售票员9732】售票成功，剩余票数：2
+【售票员1640】售票成功，剩余票数：2
+【售票员5976】售票成功，剩余票数：2
+【售票员8048】售票成功，剩余票数：2
+【售票员10516】售票成功，剩余票数：2
+【售票员9732】售票成功，剩余票数：1
+【售票员1640】售票成功，剩余票数：1
+【售票员5976】售票成功，剩余票数：1
+【售票员8048】售票成功，剩余票数：1
+【售票员10516】售票成功，剩余票数：1
+【售票员1640】售票成功，剩余票数：0
+【售票员9732】售票成功，剩余票数：0
+【售票员5976】售票成功，剩余票数：0
+【售票员8048】售票成功，剩余票数：0
+【售票员10516】售票成功，剩余票数：0
+```
+
+---
+
+多个进程同时进行票数判断的时候，在没有及时修改票数的情况下，就会出现数据不同步的问题。这套操作由于没有对同步的限制，所以就造成了不同步的问题。
+
+
+
+**Lock**
+
+并发进程的执行如果要进行同步处理，那么就必须对一些核心代码进行同步。Python中提供了一个`Lock`同步锁机制，利用这种锁机制可以实现部分代码的同步锁定，保证每一次只允许有一个进程执行这部分的代码。
+
+![](./img/C11/11-6/1.png)
+
+| 方法                                        | 描述                                       |
+| ------------------------------------------- | ------------------------------------------ |
+| def acquire(self, blocking=True, timeout=1) | 获取锁，如果当前没有可用锁资源，则进行等待 |
+| def release(self)                           | 操作完毕，释放锁资源                       |
+
+---
+
+【代码】售票操作（正确版本）
+
+```python
+import multiprocessing
+import time
+
+def sell_ticket(lock, dict):
+    while True:     # 持续售票
+        # 请求锁定，如果5秒没有锁定则放弃
+        lock.acquire(timeout=5)
+        
+        # 获取当前剩余票数
+        num = dict.get("ticket")
+        
+        if num > 0:         # 如果还有票剩余
+            time.sleep(1)   # 模拟网络延迟
+            num -= 1        # 票数减1
+            print("【售票员%d】售票成功，剩余票数：%d" % (
+                multiprocessing.current_process().pid,
+                num
+            ))
+            dict.update({"ticket":num})     # 更新票数
+        else:                # 已经没有票了
+            break
+        
+        lock.release()      # 释放锁
+
+def main():
+    lock = multiprocessing.Lock()   # 同步锁
+    # 创建共享数据对象
+    manager = multiprocessing.Manager()
+    # 创建一个可以被多个进程共享的字典对象
+    ticket_dict = manager.dict(ticket=5)   # 默认有5张票
+
+    # 创建多个售票进程
+    sellers = [
+        multiprocessing.Process(
+            target=sell_ticket, args=(lock, ticket_dict)) 
+        for _ in range(5)
+    ]
+
+    for seller in sellers:
+        seller.start()
+    for seller in sellers:
+        seller.join()   # 进程强制执行
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【售票员14612】售票成功，剩余票数：4
+【售票员15868】售票成功，剩余票数：3
+【售票员13972】售票成功，剩余票数：2
+【售票员10844】售票成功，剩余票数：1
+【售票员2872】售票成功，剩余票数：0
+```
+
+---
+
+一旦程序中追加了同步锁，那么程序的部分代码就只能以单进程执行了，这样势必会造成程序的执行性能下降，只有在考虑数据操作安全的情况下才会使用锁机制。
+
+
+
+**Semaphore**
+
+`Semaphore（信号量）`是一种有限资源的进程同步管理机制。例如银行的业务办理，所有客户都会拿到一个号码，而后号码会被业务窗口叫号，被叫号的办理者就可以办理业务。
+
+`Semaphore`类本质上是一种带有计数功能的进程同步机制，`acquire()`减少计数，`release()`增加计数。当可用信号量的计数为0时，后续进程将被阻塞。
+
+![](./img/C11/11-6/2.png)
+
+`Lock`一般是针对于一个资源同步的，而`Semaphore`是针对有限资源的并行访问。
+
+---
+
+【代码】信号量同步处理
+
+```python
+import multiprocessing
+import time
+
+def work(sema):
+    if sema.acquire():      # 获取信号量
+        print("【进程%d】开始办理业务" % 
+            multiprocessing.current_process().pid)
+        time.sleep(2)       # 模拟办理业务
+        print("【进程%d】结束办理业务" % 
+            multiprocessing.current_process().pid)
+        sema.release()      # 释放资源
+
+def main():
+    # 允许3个进程并发执行
+    sema = multiprocessing.Semaphore(3)
+    workers = [
+        multiprocessing.Process(target=work, args=(sema,))
+        for _ in range(10)
+    ]
+
+    for worker in workers:
+        worker.start()
+    for worker in workers:
+        worker.join()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+【进程7880】开始办理业务
+【进程3032】开始办理业务
+【进程5412】开始办理业务
+【进程7880】结束办理业务
+【进程2876】开始办理业务
+【进程3032】结束办理业务 
+【进程14076】开始办理业务
+【进程5412】结束办理业务
+【进程8816】开始办理业务
+【进程2876】结束办理业务
+【进程14076】结束办理业务
+【进程7900】开始办理业务
+【进程7860】开始办理业务
+【进程8816】结束办理业务
+【进程16252】开始办理业务
+【进程7860】结束办理业务
+【进程7900】结束办理业务
+【进程972】开始办理业务
+【进程16252】结束办理业务
+【进程972】结束办理业务
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+# 第12章 网络编程
+
+## 12.1 网络编程
+
+**网络编程**
+
+对于现代的程序开发来讲，几乎都是面向于网络的应用环境，包括程序项目开发也完全离不开网络。例如使用Python开发就一定会需要通过`pip`下载相应的模块组件。
+
+世界上最早出现的计算机是为了解决数据的计算以及密码的破译，如果继续眼神也都是军方进行数据存储的重要的技术研究。而后计算机开始进入到普通平民的生活，当有了多台电脑之后肯定需要想办法把这多台电脑进行连接，于是就有了局域网。世界上的人们都想要进行连接，那么就需要创建互联网。
+
+![](./img/C12/12-1/1.png)
+
+两台主机通讯一定要保证所有的网络线路是通畅的，协议指的是双方必须遵守的共同约定，在进行网络通讯的时候实际上核心的功能就是I/O操作。
+
+
+
+**网络程序开发模式**
+
+在进行网络程序开发的过程之中一般都会考虑两种不同的开发模式：
+
+1. `C/S模式（Client / Server，客户端与服务端架构）`：该设计架构一般需要编写两套不同的程序，一套是服务端程序，另一套是客户端程序。在进行项目维护的时候需要进行两套项目的维护，所以维护成本很高。但是这种程序一般使用特定的协议、特定的数据结构、影藏的端口等，所以安全性是比较高的。
+2. `B/S模式（Browser / Server，浏览器与服务端架构）`：主要是基于WEB设计的一种架构，基于浏览器的形式作为客户端进行访问。在程序开发的时候只开发一套服务端即可，所以开发的成本比较低，而且用户使用门槛页比较低。但是这种开发一般都是基于HTTP协议完成的，所以其安全性不高，因为使用的是公共的80端口，极易遭到攻击。
+
+![](./img/C12/12-1/2.png)
+
+
+
+**OSI七层模型**
+
+对于网络程序的开发不仅仅是一个简单的数据交换的过程，还包含一些数据的处理逻辑，同时所有的网络设备也一定会由不同的硬件产商生产。所以为了可以保证数据传输的可靠性以及标准型，就定义了`OSI (Open System Interconnection)`七层模型。
+
+| No.  | 协议层名称 | 描述                                                         |
+| :--: | :--------: | ------------------------------------------------------------ |
+|  1   |   应用层   | 提供网络服务操作接口                                         |
+|  2   |   表示层   | 对要传输的数据进行处理，例如数据编码                         |
+|  3   |   会话层   | 管理不同通讯节点之间的连接信息                               |
+|  4   |   传输层   | 建立不同结点之间的网络连接                                   |
+|  5   |   网络层   | 将网络地址映射为MAC地址实现数据包转发                        |
+|  6   | 数据链路层 | 将要发送的数据包转为数据帧，使其在不可靠的物理链路上进行可靠的数据传输 |
+|  7   |   物理层   | 利用物理设备实现数据的传输                                   |
+
+由于有了这七层不同的网络数据的处理分类，所以任何的硬件产商生产的设备，其核心的处理本质都不会发生改变。
+
+![](./img/C12/12-1/3.png)
+
+在`OSI`七层模型中，每一层都需要对数据进行相应的处理。在传输层为数据追加端信息、在网络层为数据增加包信息、在数据链路层为数据追加帧信息、在物理层进行二进制的数据传输。
+
+Python属于高级语言，所以对于所有的网络程序开发不可能让开发者自行处理具体的`OSI`模型，应该采用统一的模式进行定义，这样就有了`Socket`编程。
+
+
+
+**Socket网络编程**
+
+`Socket（套接字）`是一种对`TCP`网络协议进行的一种包装（协议的抽闲应用），它本身最大的特点是提供了不同进行之间的数据通讯操作。所有的网络协议的组成是非常繁琐的，如果所有的开发者去研究具体的通讯协议会对开发带来很大的难度，所以在不同的编程语言内部就会考虑对一些网络的协议进行包装。
+
+`Socket`主要是真对两种协议的包装：
+
+1.  `TCP（Transmission Control Protocol传输控制协议）`：采用有状态的通讯机制进行传输，在通讯时会通过三次握手机制保证与一个指定节点的数据传输的可靠性，在通讯完毕后会通过四次挥手的机制关闭连接。由于在每次数据通讯前都需要消耗大量的时间进行连接控制，所以执行性能较低，且系统资源占用较大。
+2. `UDP（User Datagram Protocol用户数据报协议）`：采用无状态的通讯机制进行传输，没有了`TCP`中复杂的握手与挥手处理机制，这样就节约了大量的系统资源，同时数据传输性能较高。但是由于不保存单个节点的连接状态，所以发送的数据不一定可以被全部接收。`UDP`不需要连接就可以直接发送数据，并且多个接收端都可以接收同样的消息，所以使用`UDP`适合于广播操作。
+
+![](./img/C12/12-1/4.png)
+
+<div style="page-break-after: always;"></div>
+
+## 12.2 TCP与UDP
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
+【代码】
+
+```python
+
+```
+
+> 运行结果
+
+```
+
+```
+
+
+
+
+
 【代码】
 
 ```python
