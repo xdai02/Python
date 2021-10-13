@@ -1,0 +1,1 @@
+SELECT * from info WHERE gpa >= 3.3 AND gpa <= 3.6;

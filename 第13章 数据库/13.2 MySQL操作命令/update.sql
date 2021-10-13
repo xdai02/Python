@@ -1,1 +1,0 @@
-UPDATE user SET age = 21, height = 172.3 WHERE uid = 1;

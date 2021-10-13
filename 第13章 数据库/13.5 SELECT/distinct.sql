@@ -1,0 +1,1 @@
+SELECT DISTINCT name, gpa FROM info;

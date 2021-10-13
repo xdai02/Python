@@ -5428,6 +5428,8 @@ pid-file=D:\mysql-dc\logs\mysql.pid
 socket=D:\mysql-dc\data\mysql.sock
 ```
 
+---
+
 5. 数据库初始化：在命令行中通过`MySQL`提供的命令生成结构性文件，数据库初始化的时候会自动生成一个临时的密码，在没有修改之前只能通过此密码进行`MySQL`数据库的访问。
 
 ---
@@ -5503,15 +5505,754 @@ update user set user.Host='%' where user.User='root';
 flush privileges;
 ```
 
+`MySQL`数据库需要通过命令的模式来完成，要想使用`MySQL`数据库就必须通过用户名和密码进行数据库的登录。
+
+---
+
+【代码】数据库登录
+
+```mysql
+mysql -uroot -pmysqladmin
+```
+
+---
+
+在一个数据库平台上会存在许多的数据库，通过`SHOW DATABASES;`可以查看当前环境下所有已经存在的数据库信息。
+
+---
+
+【代码】查看数据库
+
+```mysql
+SHOW DATABASES;
+```
+
+> 运行结果
+
+```
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+```
+
 ---
 
 <div style="page-break-after: always;"></div>
 
-## 13.2 TODO
+## 13.2 CREATE
+
+**创建数据库**
+
+`CREATE`负责数据库对象的创建，数据库、数据表、数据库索引、函数等都可以使用`CREATE`来创建。
+
+既然在一个平台上会有许多的数据库，那么在使用的时候就必须明确地确定好一个数据库，通过`USE`命令来进行数据库的使用切换。
+
+```mysql
+CREATE DATABASE [database_name];
+USE [database_name];
+```
+
+---
+
+【代码】创建student数据库
+
+```mysql
+CREATE DATABASE student;
+USE student;
+```
+
+---
+
+SQL语句可以保存到`.sql`脚本中，在连接MySQL数据库后使用`source`指定脚本路径。
+
+```mysql
+source [path]
+```
+
+
+
+**创建数据表**
+
+`CREATE TABLE`指令可以在数据库中创建数据表。通过`DESC`指令可以查看数据表结构。
+
+```mysql
+CREATE TABLE [table_name](
+    [col1] [datatype1],
+    [col2] [datatype2],
+    [col3] [datatype3],
+    ....
+);
+
+DESC [table_name];
+```
+
+---
+
+【代码】创建info数据表，字段包括id、name、gpa
+
+```mysql
+CREATE TABLE info(
+    id int, 
+    name varchar(16), 
+    gpa double(5, 2)
+);
+
+DESC info;
+```
+
+> 运行结果
+
+```
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int         | YES  |     | NULL    |       |
+| name  | varchar(16) | YES  |     | NULL    |       |
+| gpa   | double(5,2) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+```
+
+---
+
+`NULL`是对未知/缺失属性的标识，常用于表示某个字段为空，`NULL`是所有可以为空字段的默认值。
+
+`NULL`必须使用运算符`IS`和`IS NOT`进行比较。`NULL`与`0`并不是等价的，它们无法比较。
+
+
+
+**约束（Constraint）**
+
+SQL约束用于在新建或修改数据表时，给数据表或数据表中的字段加上约束条件。约束既可以在字段上，也可以在表上。一个字段，或者一张表可以有多个约束。
+
+```mysql
+CREATE TABLE [table_name](
+    [col1] [datatype1] [constraint1],
+    [col2] [datatype2] [constraint2],
+    [col3] [datatype3] [constraint3],
+    ....,
+    [constraint4]
+);
+```
+
+|    约束     |    功能    |
+| :---------: | :--------: |
+|  NOT NULL   |  字段非空  |
+|   DEFAULT   | 字段默认值 |
+|   UNIQUE    |  字段唯一  |
+| PRIMARY KEY |    主键    |
+| FOREIGN KEY |    外键    |
+|    CHECK    |  校验字段  |
+
+- `DEFAULT`会给字段添加上默认值，若字段在添加的时候没有指定值，则使用默认值。
+
+- `NOT NULL`表示一个字段是非空的，当在插入或者修改时，如果字段为空则报错。
+
+- `PRIMARY KEY`表示主键，用于唯一标识数据表中的每一条记录。主键不能为空，并且必须是唯一的，即每条记录的主键必须各不相同。
+
+- `UNIQUE`用于唯一数据表中的每一条记录，`UNIQUE`约束的字段必须是唯一的，即该字段在每条记录中必须各不相同。`PRIMARY KEY`约束默认拥有`UNIQUE`约束。每个表可以有多个`UNIQUE`约束，但是只能有一个`PRIMARY KEY`。
+
+在数据表已经存在的情况下不能重复创建同名表，因此需要使用`DROP`语句删除已经存在的数据表。
+
+---
+
+【代码】创建info数据表，字段包括id、name、gpa，其中id为主键，name为非空字段，gpa默认为0
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int PRIMARY KEY,
+    name varchar(16) NOT NULL,
+    gpa double(5, 2) DEFAULT 0
+);
+
+DESC info;
+```
+
+> 运行结果
+
+```
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int         | NO   | PRI | NULL    |       |
+| name  | varchar(16) | NO   |     | NULL    |       |
+| gpa   | double(5,2) | YES  |     | 0.00    |       |
++-------+-------------+------+-----+---------+-------+
+```
+
+---
+
+
+
+**CHECK**
+
+`CHECK`约束用于限制字段值的范围，既可以定义在单个字段上，也可以在定义在表上对特定字段进行约束。`CHECK`可以在数据库层面上筛选掉不符合约束的数据。创建成功后，若插入的数据不满足条件，会导致插入失败。
+
+---
+
+【代码】创建数据表info，包括id、name、age，age字段添加CHECK约束，规定所有age必须大于0
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int,
+    name varchar(20),
+    age int unsigned CHECK(age > 0)
+);
+
+DESC info;
+```
+
+> 运行结果
+
+```
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| id    | int          | YES  |     | NULL    |       |
+| name  | varchar(20)  | YES  |     | NULL    |       |
+| age   | int unsigned | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+```
+
+---
 
 <div style="page-break-after: always;"></div>
 
-## 13.3  TODO
+## 13.3 DROP
+
+**DROP**
+
+`DROP`指令用于删除数据库、数据表、索引和视图等，`DROP`强大而又危险，它能迅速清理掉数据库垃圾，不过使用之前请仔细斟酌，删除的数据很可能再也找不回来了。`DROP`几乎可以清理掉数据库中的任何对象，因此在操作之前必须确保数据的安全性。
+
+删除数据库、诉苦表语法如下：
+
+```mysql
+DROP DATABASE [db_name];
+DROP TABLE [table_name];
+```
+
+`TRUNCATE`指令可以在保留数据表的情况下清空数据表数据。
+
+```mysql
+TRUNCATE TABLE [table_name];
+```
+
+<div style="page-break-after: always;"></div>
+
+## 13.4 INSERT
+
+**初始数据**
+
+---
+
+【代码】初始数据
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int,
+    name varchar(16),
+    gpa double(5, 2)
+);
+```
+
+---
+
+
+
+**INSERT**
+
+`INSERT`指令用于向数据表中添加记录，`INSERT`插入数据分为普通插入和批量插入。并不是每个`RDBMS`都支持批量插入，批量插入的移植性并不好，如果所使用的数据库不支持，可以将其改为多个普通插入。
+
+```mysql
+INSERT INTO [table_name] ([col1], [col2]) VALUES([val1], [val2]);
+```
+
+如果插入的数据是全字段，那么可以省略前面的`col`。
+
+```mysql
+INSERT INTO [table_name] VALUES([val1], [val2]);
+```
+
+---
+
+【代码】向数据表info中插入一条记录，id为1，name为Terry，gpa为3.7
+
+```mysql
+INSERT INTO info VALUES(1, "Terry", 3.7);
+SELECT * FROM info;
+```
+
+> 运行结果
+
+```
++------+-------+------+
+| id   | name  | gpa  |
++------+-------+------+
+|    1 | Terry | 3.70 |
++------+-------+------+
+```
+
+---
+
+批量插入与普通插入的区别在于，`VALUES`关键字后面接受多个字段元组，每个`()`代表一个字段元组，一个字段元组会生成一条记录。
+
+```mysql
+INSERT INTO [table_name] ([col1], [col2]) VALUES
+([val1], [val2]),
+([val1], [val2]);
+```
+
+---
+
+【代码】向info表中插入两条记录，第一条记录{2, "Lily", 4.2}，第二条记录{3, "Eric", 3.3}
+
+```mysql
+INSERT INTO info VALUES (2, "Lily", 4.2), (3, "Eric", 3.3);
+SELECT * FROM info;
+```
+
+> 运行结果
+
+```
++------+-------+------+
+| id   | name  | gpa  |
++------+-------+------+
+|    1 | Terry | 3.70 |
+|    2 | Lily  | 4.20 |
+|    3 | Eric  | 3.30 |
++------+-------+------+
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 13.5 SELECT
+
+**初始数据**
+
+---
+
+【代码】初始数据
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int,
+    name varchar(16),
+    gpa double(5, 2)
+);
+
+INSERT INTO info VALUES
+(1, "Terry", 3.7),
+(2, "Lily", 4.2),
+(3, "Eric", 3.3),
+(4, "Alice", 3.6),
+(5, "Lily", 4.2),
+(6, "Terry", 3.7),
+(7, "Anna", 4.1),
+(8, "Jason", 3.9);
+```
+
+---
+
+
+
+**查询数据库信息**
+
+`SELECT`指令用于查询数据库中的数据，通过`SELECT`可以快速获取数据库中的变量和信息。
+
+---
+
+【代码】获取数据库版本和用户信息
+
+```mysql
+SELECT version();
+SELECT current_user;
+```
+
+> 运行结果
+
+```
++-----------+
+| version() |
++-----------+
+| 8.0.26    |
++-----------+
+
++--------------+
+| current_user |
++--------------+
+| root@%       |
++--------------+
+```
+
+---
+
+
+
+**查询数据表数据**
+
+大部分情况下，`SELECT`都是用来获取数据表数据。
+
+```mysql
+SELECT [col1], [col2] FROM [table_name];
+```
+
+`SELECT`后面跟的是要查询的字段名，若是查询所有字段，可以使用`*`表示。但是即使是获取全字段，也不推荐使用`*`，显式地给出查询字段，更容易维护和合作。
+
+```mysql
+SELECT * FROM [table_name];
+```
+
+---
+
+【代码】查询info表中name和gpa字段
+
+```mysql
+SELECT name, gpa FROM info;
+```
+
+> 运行结果
+
+```
++-------+------+
+| name  | gpa  |
++-------+------+
+| Terry | 3.70 |
+| Lily  | 4.20 |
+| Eric  | 3.30 |
+| Alice | 3.60 |
+| Lily  | 4.20 |
+| Terry | 3.70 |
+| Anna  | 4.10 |
+| Jason | 3.90 |
++-------+------+
+```
+
+---
+
+有时查询出来的所有数据会很多，`SELECT`在查询的时候可以使用`LIMIT`指定条数。
+
+```mysql
+SELECT [col1], [col2] FROM [table_name] LIMIT n;
+```
+
+有时想要查询指定起始位置指定条数的结果集，起始位置默认为0。
+
+```mysql
+SELECT [col1], [col2] FROM [table_name] LIMIT start_pos, n;
+```
+
+使用`AS`指令可以为表名或列明指定别名， 在显示结果时使字段名称更具有可读性。
+
+---
+
+【代码】查询info表中前4条数据
+
+```mysql
+SELECT name AS student_name, gpa FROM info LIMIT 4;
+```
+
+> 运行结果
+
+```
++--------------+------+
+| student_name | gpa  |
++--------------+------+
+| Terry        | 3.70 |
+| Lily         | 4.20 |
+| Eric         | 3.30 |
+| Alice        | 3.60 |
++--------------+------+
+```
+
+---
+
+
+
+**DISTINCT**
+
+有时候查询结果中会包含重复的信息，`DISTINCT`关键字用于返回去重后的数据，但是`DISTINCT`去掉重复值带来的时间损耗比查询本身更耗时。`DISTINCT`既可以用来修饰单字段，也可以用来修饰多字段。
+
+```mysql
+SELECT DISTINCT [col1], [col2] FROM [table_name];
+```
+
+---
+
+【代码】去除info表中重复记录
+
+```mysql
+SELECT DISTINCT name, gpa FROM info;
+```
+
+> 运行结果
+
+```
++-------+------+
+| name  | gpa  |
++-------+------+
+| Terry | 3.70 |
+| Lily  | 4.20 |
+| Eric  | 3.30 |
+| Alice | 3.60 |
+| Anna  | 4.10 |
+| Jason | 3.90 |
++-------+------+
+```
+
+---
+
+
+
+**WHERE**
+
+数据表中的数据往往比较繁杂，在查询的时候需要按照一定的条件进行筛选，`WHERE`指令用于筛选出满足条件的结果集。
+
+`WHERE`后仅有一个条件子句的查询称为单条件查询。
+
+```mysql
+SELECT [col1], [col2] from [table_name]WHERE [col] [condition] [val];
+```
+
+搭配不同的运算符，可以让`WHERE`的条件过滤变得更为强大。
+
+| 运算符 | 功能                                                         |
+| :----: | ------------------------------------------------------------ |
+|   >    | 大于                                                         |
+|   >=   | 大于等于                                                     |
+|   <    | 小于                                                         |
+|   <=   | 小于等于                                                     |
+|   =    | 等于                                                         |
+| !=、<> | 不等于                                                       |
+|   !>   | 不大于                                                       |
+|   !<   | 不小于                                                       |
+|  AND   | 连接两个条件表达式，若二者都为True，返回True，否则返回False  |
+|   OR   | 连接两个条件表达式，若二者都为False，返回False，否则返回True |
+
+---
+
+【代码】查询info表中gpa在3.3~3.5之间的学生
+
+```mysql
+SELECT * from info WHERE gpa >= 3.3 AND gpa <= 3.6;
+```
+
+> 运行结果
+
+```
++------+-------+------+
+| id   | name  | gpa  |
++------+-------+------+
+|    3 | Eric  | 3.30 |
+|    4 | Alice | 3.60 |
++------+-------+------+
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 13.6 UPDATE
+
+**初始数据**
+
+---
+
+【代码】初始数据
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int,
+    name varchar(16),
+    gpa double(5, 2)
+);
+
+INSERT INTO info VALUES
+(1, "Terry", 3.7),
+(2, "Lily", 4.2),
+(3, "Eric", 3.3);
+```
+
+---
+
+
+
+**UPDATE**
+
+`UPDATE`指令用于更新数据库，一般情况下`UPDATE`会和`WHERE`搭配使用。
+
+```mysql
+UPDATE [table_name] SET [col] = [val] WHERE [col] = [val];
+```
+
+---
+
+【代码】在info表中，将Eric的姓名改为Kris，gpa改为3.4
+
+```mysql
+UPDATE info SET name = "Kris", gpa = 3.4 WHERE name = "Eric";
+SELECT * FROM info;
+```
+
+> 运行结果
+
+```
++------+-------+------+
+| id   | name  | gpa  |
++------+-------+------+
+|    1 | Terry | 3.70 |
+|    2 | Lily  | 4.20 |
+|    3 | Kris  | 3.40 |
++------+-------+------+
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 13.7 DELETE
+
+**初始数据**
+
+---
+
+【代码】初始数据
+
+```mysql
+DROP TABLE IF EXISTS info;
+
+CREATE TABLE info(
+    id int,
+    name varchar(16),
+    gpa double(5, 2)
+);
+
+INSERT INTO info VALUES
+(1, "Terry", 3.7),
+(2, "Lily", 4.2),
+(3, "Eric", 3.3);
+```
+
+---
+
+
+
+**DELETE**
+
+`DELETE`指令用于删除数据库中的数据，一般情况下`DELETE`会和`WHERE`一起搭配使用，来删除指定数据。
+
+`DELETE`删除的单位是行，即一条记录，而不是用于删除某个字段。
+
+```mysql
+DELETE FROM [table_name] WHERE [col] = [val];
+```
+
+切勿直接使用`DELETE FROM [table_name]`，这样会直接删除所有的数据。删除数据是一个危险操作，在使用前请慎重考虑。
+
+---
+
+【代码】在info表中删除Eric的记录
+
+```mysql
+DELETE FROM info WHERE name = "Eric";
+SELECT * FROM info;
+```
+
+> 运行结果
+
+```
++------+-------+------+
+| id   | name  | gpa  |
++------+-------+------+
+|    1 | Terry | 3.70 |
+|    2 | Lily  | 4.20 |
++------+-------+------+
+```
+
+---
+
+<div style="page-break-after: always;"></div>
+
+## 13.8 pymysql模块
+
+**pymysql模块**
+
+Python中针对`MySQL`数据库的开发操作提供有`pymysql`（Python3）和`mysqldb`（Python2）这两个核心模块。
+
+对于数据库的开发操作，首先需要解决的就是数据库的连接。在Python中可以直接利用`pymysql.connect()`工厂函数获取数据库连接对象，这样就会返回一个`pymysql.connections.Connection`类的对象实例，通过此实例可以进行数据库的操作。
+
+在进行`connect()`函数连接的时候必须明确地设置数据库连接的主机名称、端口号、用户名、密码、数据库名称。
+
+---
+
+【代码】MySQL数据库操作
+
+```python
+import pymysql
+import traceback
+
+INSERT = "INSERT INTO info VALUES \
+            (3, 'Henry', 3.6)"
+SEARCH = "SELECT * FROM info"
+
+def main():
+    try:
+        # 连接数据库
+        conn = pymysql.connect(
+            host="localhost",
+            port=3306,
+            charset="UTF8",
+            user="root",
+            password="mysqladmin",
+            database="student"
+        )
+        print("MySQL数据库连接成功")
+        print("数据库版本：%s" % conn.get_server_info())
+
+        db = conn.cursor()      # 获取数据库操作对象
+        db.execute(INSERT)      # 执行SQL语句
+        conn.commit()           # 提交事务，否则不会更新
+        print("影响数据行数：%d" % db.rowcount)
+
+        db.execute(SEARCH)
+        for row in db.fetchall():   # 查询结果
+            print(row)
+    except Exception:
+        print(traceback.format_exc())
+    finally:
+        db.close()
+
+if __name__ == "__main__":
+    main()
+```
+
+> 运行结果
+
+```
+MySQL数据库连接成功
+数据库版本：8.0.26
+影响数据行数：1
+(1, 'Terry', 3.7)
+(2, 'Lily', 4.2)
+(3, 'Henry', 3.6)
+```
+
+---
 
 <div style="page-break-after: always;"></div>
 
