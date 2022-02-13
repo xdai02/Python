@@ -73,22 +73,25 @@ Python中逻辑运算符有三种：
 
 \subsection{if}
 
-分支结构最大特征就是可以进行指定条件的判断处理，关键字为if、elif、else。 \\
+分支结构最大特征就是可以进行指定条件的判断处理，关键字为if、elif、else。\\
 
 每一个满足条件之后的语句都可以有多条，并且在Python里面是利用缩进来确定语句的关系。使用逻辑运算符可以进行若干个条件的连接。
 
-\begin{itemize}
-    \item 单分支
-          \vspace{-0.5cm}
-          \begin{lstlisting}[language=Python]
+\subsubsection{单分支}
+
+\vspace{-1cm}
+
+\begin{lstlisting}[language=Python]
 age = 15
 if 0 < age < 18:
     print("未成年")
 \end{lstlisting}
 
-    \item 双分支
-          \vspace{-0.5cm}
-          \begin{lstlisting}[language=Python]
+\subsubsection{双分支}
+
+\vspace{-1cm}
+
+\begin{lstlisting}[language=Python]
 age = 30
 if 0 < age < 18:
     print("未成年人")
@@ -96,9 +99,11 @@ else:
     print("成年人")
 \end{lstlisting}
 
-    \item 多分支
-          \vspace{-0.5cm}
-          \begin{lstlisting}[language=Python]
+\subsubsection{多分支}
+
+\vspace{-1cm}
+
+\begin{lstlisting}[language=Python]
 score = 76
 
 if 90 <= score <= 100:
@@ -108,7 +113,8 @@ elif score >= 60:
 else:
     print("不合格")
 \end{lstlisting}
-\end{itemize}
+
+\vspace{0.5cm}
 
 \mybox{判断整数奇偶}
 
@@ -136,9 +142,9 @@ if num > 0:
 
 \subsection{断言（Assertion）}
 
-设置断言表达式后，当满足条件时程序正常执行，当断言失败时，程序会中断执行。在进行断言时可以配置错误的提示信息，否则很难知道那块代码出现了错误。 \\
+设置断言表达式后，当满足条件时程序正常执行，当断言失败时，程序会中断执行。在进行断言时可以配置错误的提示信息，否则很难知道那块代码出现了错误。\\
 
-通过断言可以直接查找出程序的错误，但从另外一个角度来讲，断言由于不受到程序逻辑的控制，可能会造成许多的额外的问题，在实际的开发之中慎用。 \\
+通过断言可以直接查找出程序的错误，但从另外一个角度来讲，断言由于不受到程序逻辑的控制，可能会造成许多的额外的问题，在实际的开发之中慎用。\\
 
 \mybox{断言}
 

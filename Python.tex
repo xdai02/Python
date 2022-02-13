@@ -25,11 +25,6 @@
 \usepackage{pgf-umlcd}
 \usepackage{bbding}
 \usepackage[edges]{forest}
-% \usepackage{minted}
-
-\makeatletter
-\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
-\makeatother
 
 \usetikzlibrary{calc,trees,positioning,arrows,fit,shapes}
 \usetikzlibrary{shapes.multipart,chains}
@@ -40,6 +35,10 @@
 \tikzstyle{process}   = [rectangle, minimum width=3cm, minimum height=1cm, inner ysep=0, text centered, draw=black, fill=orange!30]
 \tikzstyle{decision}  = [diamond,shape aspect=2.5, minimum width=3cm, minimum height=1cm, inner xsep=0,text centered, draw=black, fill=green!30]
 \tikzstyle{arrow}     = [thick,->,>=stealth]
+
+\makeatletter
+\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
+\makeatother
 
 \def\rlwd{.5pt} \def\rlht{2.2ex} \def\rldp{.5ex}
 \def\mydiv#1{~%
@@ -175,29 +174,6 @@
         rounded corners=0.6cm,
         transform canvas ={rotate around ={45:($(current page.north west)+(20,-9)$)}}]
     ($(current page.north west)+(20,-9)$) rectangle ++(14,1.2);
-
-    % Year
-    % \draw[ultra thick,gray]
-    % ($(current page.center)+(5,2)$) -- ++(0,-3cm)
-    node[
-            midway,
-            left=0.25cm,
-            text width=5cm,
-            align=right,
-            black!75
-        ]
-        {
-            % {\fontsize{25}{30} \selectfont \bf ANNUAL \\[10pt] REPORT}
-        }
-    node[
-            midway,
-            right=0.25cm,
-            text width=6cm,
-            align=left,
-            orange]
-        {
-            % {\fontsize{72}{86.4} \selectfont 2020}
-        };
 
     % Title
     \node[align=center] at ($(current page.center)+(0,-5)$)
