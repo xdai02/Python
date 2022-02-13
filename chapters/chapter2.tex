@@ -1,0 +1,173 @@
+\chapter{判断}
+
+\section{逻辑运算符}
+
+\subsection{逻辑运算符}
+
+Python中逻辑运算符有三种：
+
+\begin{enumerate}
+    \item 逻辑与and：当多个条件同时为真，结果为真。
+          \begin{table}[H]
+              \centering
+              \setlength{\tabcolsep}{5mm}{
+                  \begin{tabular}{|c|c|c|}
+                      \hline
+                      \textbf{条件1} & \textbf{条件2} & \textbf{条件1 and 条件2} \\
+                      \hline
+                      T              & T              & T                        \\
+                      \hline
+                      T              & F              & F                        \\
+                      \hline
+                      F              & T              & F                        \\
+                      \hline
+                      F              & F              & F                        \\
+                      \hline
+                  \end{tabular}
+              }
+              \caption{逻辑与}
+          \end{table}
+
+    \item 逻辑或or：多个条件有一个为真时，结果为真。
+          \begin{table}[H]
+              \centering
+              \setlength{\tabcolsep}{5mm}{
+                  \begin{tabular}{|c|c|c|}
+                      \hline
+                      \textbf{条件1} & \textbf{条件2} & \textbf{条件1 or 条件2} \\
+                      \hline
+                      T              & T              & T                       \\
+                      \hline
+                      T              & F              & T                       \\
+                      \hline
+                      F              & T              & T                       \\
+                      \hline
+                      F              & F              & F                       \\
+                      \hline
+                  \end{tabular}
+              }
+              \caption{逻辑或}
+          \end{table}
+
+    \item 逻辑非not：条件为真时，结果为假；条件为假时，结果为真。
+          \begin{table}[H]
+              \centering
+              \setlength{\tabcolsep}{5mm}{
+                  \begin{tabular}{|c|c|}
+                      \hline
+                      \textbf{条件} & \textbf{not 条件} \\
+                      \hline
+                      T             & F                 \\
+                      \hline
+                      F             & T                 \\
+                      \hline
+                  \end{tabular}
+              }
+              \caption{逻辑非}
+          \end{table}
+\end{enumerate}
+
+\newpage
+
+\section{if}
+
+\subsection{if}
+
+分支结构最大特征就是可以进行指定条件的判断处理，关键字为if、elif、else。 \\
+
+每一个满足条件之后的语句都可以有多条，并且在Python里面是利用缩进来确定语句的关系。使用逻辑运算符可以进行若干个条件的连接。
+
+\begin{itemize}
+    \item 单分支
+          \vspace{-0.5cm}
+          \begin{lstlisting}[language=Python]
+age = 15
+if 0 < age < 18:
+    print("未成年")
+\end{lstlisting}
+
+    \item 双分支
+          \vspace{-0.5cm}
+          \begin{lstlisting}[language=Python]
+age = 30
+if 0 < age < 18:
+    print("未成年人")
+else:
+    print("成年人")
+\end{lstlisting}
+
+    \item 多分支
+          \vspace{-0.5cm}
+          \begin{lstlisting}[language=Python]
+score = 76
+
+if 90 <= score <= 100:
+    print("优秀")
+elif score >= 60:
+    print("合格")
+else:
+    print("不合格")
+\end{lstlisting}
+\end{itemize}
+
+\mybox{判断整数奇偶}
+
+\begin{lstlisting}[language=Python]
+num = int(input("输入一个正整数："))
+
+if num > 0:
+    if num % 2 == 0:
+        print("%d是偶数" % num)
+    else:
+        print("%d是奇数" % num)
+\end{lstlisting}
+
+\begin{tcolorbox}
+    \mybox{运行结果}
+    \begin{verbatim}
+输入一个正整数：66
+66是偶数
+	\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{断言}
+
+\subsection{断言（Assertion）}
+
+设置断言表达式后，当满足条件时程序正常执行，当断言失败时，程序会中断执行。在进行断言时可以配置错误的提示信息，否则很难知道那块代码出现了错误。 \\
+
+通过断言可以直接查找出程序的错误，但从另外一个角度来讲，断言由于不受到程序逻辑的控制，可能会造成许多的额外的问题，在实际的开发之中慎用。 \\
+
+\mybox{断言}
+
+\begin{lstlisting}[language=Python]
+import math
+
+print("计算三角形面积")
+a = float(input("第一条边："))
+b = float(input("第二条边："))
+c = float(input("第三条边："))
+
+assert a + b > c, "边长不合法"
+assert a + c > b, "边长不合法"
+assert b + c > a, "边长不合法"
+
+p = (a + b + c) / 2     # 半周长
+area = math.sqrt(p * (p-a) * (p-b) * (p-c)) # 海伦公式
+print("面积 = %.2f" % area)
+\end{lstlisting}
+
+\begin{tcolorbox}
+    \mybox{运行结果}
+    \begin{verbatim}
+计算三角形面积
+第一条边：1
+第二条边：1
+第三条边：2
+AssertionError: 边长不合法
+	\end{verbatim}
+\end{tcolorbox}
+
+\newpage
