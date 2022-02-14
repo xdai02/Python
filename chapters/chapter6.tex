@@ -1,0 +1,271 @@
+\chapter{模块}
+
+\section{模块导入}
+
+\subsection{模块（Module）}
+
+模块是进行大型项目拆分组织的一种有效技术手段，它可以将一个庞大的代码分割成若干个小的组成单元，方便进行代码的开发与维护。利用模块的划分，在进行代码维护的时候，可以保证局部的更新不影响其它的程序的运行操作。\\
+
+使用import关键字可以进行模块的导入，import可以同时导入多个模块，但是从开发的角度来讲，强烈建议分开导入。
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=Python]
+import package.module [as alias] [, ...]
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\mybox{模块导入}
+
+\begin{lstlisting}[language=Python, title=algorithm/search.py]
+def sequence_search(list, key):
+    """
+        顺序查找
+        Args:
+            list (list): 待查找数组
+            key (int): 关键字
+    """
+    for i in range(len(list)):
+        if list[i] == key:
+            return i
+    return -1
+
+def binary_search(list, key):
+    """
+        二分查找
+        Args:
+            list (list): 待查找数组
+            key (int): 关键字
+    """
+    start = 0
+    end = len(list) - 1
+    while start <= end:
+        mid = (start + end) // 2
+        if list[mid] == key:
+            return mid
+        elif list[mid] < key:
+            start = mid + 1
+        else:
+            end = mid - 1
+    return -1
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, title=import\_as.py]
+import algorithm.search as search
+
+def main():
+    list = [40, 9, 20, 93, 7, 34, 85, 91]
+    key = 34
+    print("%d所在位置：%d" % (key, search.sequence_search(list, key)))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+34所在位置：5
+\end{verbatim}
+\end{tcolorbox}
+
+在Python里有一个作者写的Python开发禅道（开发的19条哲学），如果想看到这个彩蛋的信息，可以在Python的交互模式输入import this。\\
+
+\vspace{-0.5cm}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to
+do it.
+Although that way may not be obvious at first unless you're
+Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{from-import模块导入}
+
+使用import导入模块之后需要采用module\_name.func()形式进行调用，每一次调用函数非常麻烦。from-import导入语法可以简化调用语句。\\
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=Python]
+from package.module import name [as alias] [, ...]
+\end{lstlisting}
+
+在实践中, from-import不是良好的编程风格，因为如果导入的变量与作用域中现有变量同名，那么变量就会被悄悄覆盖掉。使用import语句的时候就不会发生这种问题，通过module.var或module.func()获取的变量或方法不会与现有作用域冲突。\\
+
+\mybox{from-import导入}
+
+\begin{lstlisting}[language=Python, title=algorithm/search.py]
+def sequence_search(list, key):
+    """
+        顺序查找
+        Args:
+            list (list): 待查找数组
+            key (int): 关键字
+    """
+    for i in range(len(list)):
+        if list[i] == key:
+            return i
+    return -1
+
+def binary_search(list, key):
+    """
+        二分查找
+        Args:
+            list (list): 待查找数组
+            key (int): 关键字
+    """
+    start = 0
+    end = len(list) - 1
+    while start <= end:
+        mid = (start + end) // 2
+        if list[mid] == key:
+            return mid
+        elif list[mid] < key:
+            start = mid + 1
+        else:
+            end = mid - 1
+    return -1
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, title=from\_import.py]
+from algorithm.search import binary_search
+
+def main():
+    list = [7, 9, 20, 34, 40, 85, 91, 93]
+    key = 34
+    print("%d所在位置：%d" % (key, binary_search(list, key)))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+34所在位置：3
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{math模块}
+
+\subsection{math模块}
+
+现代计算机的基础学科就是数学，如果没有数学理论作为基础，计算机是无法的得到正常发展的。数学模块只提供了数学的基本计算功能，在很多的开发之中，有可能会需要使用到更加复杂的数学逻辑的时候就需要采用一些第三方模块进行数学计算了。\\
+
+\mybox{math模块}
+
+\begin{lstlisting}[language=Python]
+import math
+
+def main():
+    print("累加：%d" % math.fsum(range(101)))
+    print("阶乘：%d" % math.factorial(10))
+    print("乘方：%d" % math.pow(2, 10))
+    print("对数：%f" % math.log(10))
+    print("余数：%d" % math.fmod(22, 5))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+累加：5050
+阶乘：3628800
+乘方：1024
+对数：2.302585
+余数：2
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{random模块}
+
+\subsection{random模块}
+
+随机数可以在一个指定的范围之内随机地生成一些数字供使用。例如，手机验证码发送来的数字就是使用随机数的方式生成的。
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{方法}         & \textbf{功能}                                   \\
+			\hline
+			random()              & 生成一个0到1的随机浮点数：$ 0.0 \le n \le 1.0 $ \\
+			\hline
+			uniform(x, y)         & 生成一个在指定范围内的随机浮点数                \\
+			\hline
+			randint(x, y)         & 生成一个指定范围内的随机整数$ x \le n \le y $   \\
+			\hline
+			choice(sequence)      & 从序列中随机抽取数据                            \\
+			\hline
+			shuffle(x [, random]) & 将一个列表中的元素打乱                          \\
+			\hline
+			sample(sequence, k)   & 从指定序列中随机获取指定序列分片                \\
+			\hline
+		\end{tabular}
+	}
+	\caption{random模块}
+\end{table}
+
+\mybox{random模块}
+
+\begin{lstlisting}[language=Python]
+import random
+
+def main():
+    lst = [random.randint(1, 100) for _ in range(10)]
+    print("初始序列：%s" % lst)
+    print("随机抽取：", end='')
+    for _ in range(5):
+        print(random.choice(lst), end=' ')
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+初始序列：[85, 83, 83, 29, 2, 93, 30, 65, 41, 54]
+随机抽取：41 93 2 54 93
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{time模块}
+
+\subsection{time模块}
+
+time模块是Python内置的一个实现时间的操作模块，用于描述日期时间的数据类型分为三种：
