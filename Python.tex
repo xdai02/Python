@@ -41,9 +41,9 @@
 \makeatother
 
 \def\rlwd{.5pt} \def\rlht{2.2ex} \def\rldp{.5ex}
-\def\mydiv#1{~%
-  \rule[-\rldp]{\rlwd}{\rlht}%
-  \setbox0=\hbox{~#1}%
+\def\mydiv#1{~
+  \rule[-\rldp]{\rlwd}{\rlht}
+  \setbox0=\hbox{~#1}
   \stackunder[\dimexpr\rldp-\rlwd]{~#1}{\rule{\wd0}{\rlwd}}%
 }
 
@@ -105,82 +105,82 @@
 \thispagestyle{empty}
 
 \begin{tikzpicture}[overlay,remember picture]
-    % Background color
-    \fill[
-        black!2]
-    (current page.south west) rectangle (current page.north east);
+	% Background color
+	\fill[
+		black!2]
+	(current page.south west) rectangle (current page.north east);
 
-    % Rectangles
-    \shade[
-        left color=Dandelion,
-        right color=Dandelion!40,
-        transform canvas ={rotate around ={45:($(current page.north west)+(0,-6)$)}}]
-    ($(current page.north west)+(0,-6)$) rectangle ++(9,1.5);
+	% Rectangles
+	\shade[
+		left color=Dandelion,
+		right color=Dandelion!40,
+		transform canvas ={rotate around ={45:($(current page.north west)+(0,-6)$)}}]
+	($(current page.north west)+(0,-6)$) rectangle ++(9,1.5);
 
-    \shade[
-        left color=lightgray,
-        right color=lightgray!50,
-        rounded corners=0.75cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}]
-    ($(current page.north west)+(0.5,-10)$) rectangle ++(15,1.5);
+	\shade[
+		left color=lightgray,
+		right color=lightgray!50,
+		rounded corners=0.75cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}]
+	($(current page.north west)+(0.5,-10)$) rectangle ++(15,1.5);
 
-    \shade[
-        left color=lightgray,
-        rounded corners=0.3cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}] ($(current page.north west)+(1.5,-9.55)$) rectangle ++(7,.6);
+	\shade[
+		left color=lightgray,
+		rounded corners=0.3cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}] ($(current page.north west)+(1.5,-9.55)$) rectangle ++(7,.6);
 
-    \shade[
-        left color=orange!80,
-        right color=orange!60,
-        rounded corners=0.4cm,
-        transform canvas ={rotate around ={45:($(current page.north)+(-1.5,-3)$)}}]
-    ($(current page.north)+(-1.5,-3)$) rectangle ++(9,0.8);
+	\shade[
+		left color=orange!80,
+		right color=orange!60,
+		rounded corners=0.4cm,
+		transform canvas ={rotate around ={45:($(current page.north)+(-1.5,-3)$)}}]
+	($(current page.north)+(-1.5,-3)$) rectangle ++(9,0.8);
 
-    \shade[
-        left color=red!80,
-        right color=red!80,
-        rounded corners=0.9cm,
-        transform canvas ={rotate around ={45:($(current page.north)+(-3,-8)$)}}] ($(current page.north)+(-3,-8)$) rectangle ++(15,1.8);
+	\shade[
+		left color=red!80,
+		right color=red!80,
+		rounded corners=0.9cm,
+		transform canvas ={rotate around ={45:($(current page.north)+(-3,-8)$)}}] ($(current page.north)+(-3,-8)$) rectangle ++(15,1.8);
 
-    \shade[
-        left color=orange,
-        right color=Dandelion,
-        rounded corners=0.9cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(4,-15.5)$)}}]
-    ($(current page.north west)+(4,-15.5)$) rectangle ++(30,1.8);
+	\shade[
+		left color=orange,
+		right color=Dandelion,
+		rounded corners=0.9cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(4,-15.5)$)}}]
+	($(current page.north west)+(4,-15.5)$) rectangle ++(30,1.8);
 
-    \shade[
-        left color=RoyalBlue,
-        right color=Emerald,
-        rounded corners=0.75cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(13,-10)$)}}]
-    ($(current page.north west)+(13,-10)$) rectangle ++(15,1.5);
+	\shade[
+		left color=RoyalBlue,
+		right color=Emerald,
+		rounded corners=0.75cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(13,-10)$)}}]
+	($(current page.north west)+(13,-10)$) rectangle ++(15,1.5);
 
-    \shade[
-        left color=lightgray,
-        rounded corners=0.3cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(18,-8)$)}}]
-    ($(current page.north west)+(18,-8)$) rectangle ++(15,0.6);
+	\shade[
+		left color=lightgray,
+		rounded corners=0.3cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(18,-8)$)}}]
+	($(current page.north west)+(18,-8)$) rectangle ++(15,0.6);
 
-    \shade[
-        left color=lightgray,
-        rounded corners=0.4cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(19,-5.65)$)}}]
-    ($(current page.north west)+(19,-5.65)$) rectangle ++(15,0.8);
+	\shade[
+		left color=lightgray,
+		rounded corners=0.4cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(19,-5.65)$)}}]
+	($(current page.north west)+(19,-5.65)$) rectangle ++(15,0.8);
 
-    \shade[
-        left color=OrangeRed,
-        right color=red!80,
-        rounded corners=0.6cm,
-        transform canvas ={rotate around ={45:($(current page.north west)+(20,-9)$)}}]
-    ($(current page.north west)+(20,-9)$) rectangle ++(14,1.2);
+	\shade[
+		left color=OrangeRed,
+		right color=red!80,
+		rounded corners=0.6cm,
+		transform canvas ={rotate around ={45:($(current page.north west)+(20,-9)$)}}]
+	($(current page.north west)+(20,-9)$) rectangle ++(14,1.2);
 
-    % Title
-    \node[align=center] at ($(current page.center)+(0,-5)$)
-    {
-    {\fontsize{72}{72} \selectfont {{Python}}} \\[2cm]
-    {\fontsize{20}{19.2} \selectfont \textcolor{orange}{ \bf 极夜酱}} \\[4pt]
-    };
+	% Title
+	\node[align=center] at ($(current page.center)+(0,-6)$)
+	{
+	{\fontsize{72}{72} \selectfont {{Python}}}\\[2cm]
+	{\fontsize{20}{19.2} \selectfont \textcolor{orange}{ \bf 极夜酱}}\\[4pt]
+	};
 \end{tikzpicture}
 
 \newpage
@@ -194,8 +194,10 @@
 
 \setcounter{page}{1}
 
-\input{chapters/chapter1}
-\input{chapters/chapter2}
-\input{chapters/chapter3}
+% \input{chapters/chapter1}
+% \input{chapters/chapter2}
+% \input{chapters/chapter3}
+% \input{chapters/chapter4}
+\input{chapters/chapter5}
 
 \end{document}

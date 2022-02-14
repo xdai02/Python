@@ -1,0 +1,803 @@
+\chapter{数据结构}
+
+\section{序列}
+
+\subsection{序列}
+
+Python中序列类型包含字符串、列表、元组、字典。序列的核心意义在于可以进行多个数据的保存。\\
+
+Python在整体设计的过程之中强调的是简单化。以多数据的存储为例，在许多的编程语言里面，都是利用了数组实现了数据的存储，但是数据有一个最大的问题在于：长度是固定的，无法进行容量的扩充。\\
+
+在这样的背景下，很多的开发者就不得不去独立地进行一些动态数组的开发，所以就有了数据结构的概念，而数据存储的内容多了，就需要提升数据的操作性能，C、C++、Java等等都有这样的问题。\\
+
+Python在设计的时候充分地考虑到了这些动态性的设计问题，所以才将这些可能动态修改的内容统一地称为序列，也就是说Python中的序列就是一个动态（或静态）的存储，而这些存储的操作结构都是内置的，开发者可以避免数据结构的开发所造成的困难，尤其是面对与非科班的人而言。\\
+
+列表是对传统数组的一种使用包装，但是与传统数组最大的不同在于，Python中的列表的内容是允许进行动态修改的，并且Python中的列表也可以像传统数组那样机型索引的访问，这样就使得时间复杂度降低了许多。
+
+\newpage
+
+\section{列表}
+
+\subsection{列表（List）}
+
+列表使用【[]】进行列表的定义，Python的列表是对于传统数组的更高级的实现。列表可以通过索引的形式进行访问，索引下标是从0开始的，到列表长度 - 1结束。\\
+
+在使用列表进行数据存储的时候，虽然大部分的情况下都会使用相同的数据类型，但是在列表里面却可以同时有不同的数据类型，这比其它语言里面提供的数据的功能强大。虽然提供有多个数据类型的保存使得程序存储更加灵活，但是从实际的开发角度而言，尽量让数据类型保持一致会比较合理。\\
+
+在Python中列表除了正向索引访问之外，也可以进行反向索引访问。\\
+
+\mybox{列表}
+
+\begin{lstlisting}[language=Python]
+lst = [1, 2, 3]
+
+print(lst[0])
+print(lst[1])
+print(lst[2])
+
+print(lst[-1])
+print(lst[-2])
+print(lst[-3])
+
+print(lst[3])       # 越界
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+1
+2
+3
+3
+2
+1
+IndexError: list index out of range
+\end{verbatim}
+\end{tcolorbox}
+
+序列数据可以直接使用【*】进行重复定义，或者使用【+】进行与其它序列拼接。\\
+
+\mybox{序列重复/拼接}
+
+\begin{lstlisting}[language=Python]
+lst = [1, 2, 3] * 3
+print(lst)      # [1, 2, 3, 1, 2, 3, 1, 2, 3]
+
+lst = [1, 2, 3] + [4, 5, 6]
+print(lst)      # [1, 2, 3, 4, 5, 6]
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+[1, 2, 3, 1, 2, 3, 1, 2, 3]
+[1, 2, 3, 4, 5, 6]
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{成员运算符}
+
+在使用索引访问的时候都需要去考虑索引的设置错误的问题，但是使用了for循环之后，不再需要明确的进行索引的设置，避免了IndexError异常信息。\\
+
+如果想要判断某一个数据是否在列表之中存在，最直接的方式就是直接进行列表的迭代操作（其它语言传统形式）。\\
+
+\mybox{迭代查找}
+
+\begin{lstlisting}[language=Python]
+lst = ["C/C++", "Java", "Python", "JavaScript"]
+key = "Python"      # 待查找关键词
+flag = False        # 初始假设未找到
+
+for item in lst:
+    if item == key:
+        flag = True
+        break
+
+if flag:
+    print("数据存在")
+else:
+    print("数据不存在")
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+数据存在
+\end{verbatim}
+\end{tcolorbox}
+
+这种查询最大的问题在于需要进行整个列表数据的迭代，造成的结果就是时间复杂度的攀升$ O(n) $。在Python设计过程之中不希望开发者为这些复杂的执行效率犯愁，所以在使用列表判断某些数据是否存在的时候提供了专门的运算符。使用关键字in（在范围内）、not in（不在范围内）。\\
+
+\mybox{成员运算符}
+
+\begin{lstlisting}[language=Python]
+lst = ["C/C++", "Java", "Python", "JavaScript"]
+key = "Python"      # 待查找关键词
+
+if key in lst:
+    print("数据存在")
+else:
+    print("数据不存在")
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+数据存在
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{切片（Splicing）}
+
+切片可以截取部分的列表内容。在默认情况下，数据的分片都是依照数值为1的间隔进行获取的，如果有需要也可以进行步长的修改。\\
+
+\mybox{切片}
+
+\begin{lstlisting}[language=Python]
+lst = list(range(10))
+
+print("原始列表：", end='')
+print(lst)
+
+print("截取[2:7]：", end='')
+print(lst[2:7])
+
+print("截取[:5]：", end='')
+print(lst[:5])
+
+print("截取[3:]：", end='')
+print(lst[3:])
+
+print("截取[::2]：", end='')
+print(lst[::2])
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+原始列表：[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+截取[2:7]：[2, 3, 4, 5, 6]
+截取[:5]：[0, 1, 2, 3, 4]
+截取[3:]：[3, 4, 5, 6, 7, 8, 9]
+截取[::2]：[0, 2, 4, 6, 8]
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{列表操作函数}
+
+Python中的列表设计非常到位，它可以实现内容动态扩充，可以进行后期的追加或者删除。
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{函数}       & \textbf{功能}                    \\
+			\hline
+			append(data)        & 在列表最后追加新内容             \\
+			\hline
+			clear()             & 清除列表数据                     \\
+			\hline
+			copy()              & 列表拷贝                         \\
+			\hline
+			count()             & 统计某一个数据在列表中的出现次数 \\
+			\hline
+			extend(列表)        & 为一个列表追加另外一个列表       \\
+			\hline
+			index(data)         & 从列表查询某个值第一次出现的位置 \\
+			\hline
+			insert(index, data) & 向列表中指定索引位置追加新数据   \\
+			\hline
+			pop(index)          & 从列表弹出并删除一个数据         \\
+			\hline
+			remove(data)        & 从列表删除数据                   \\
+			\hline
+			reverse()           & 列表数据反转                     \\
+			\hline
+			sort()              & 列表数据排序                     \\
+			\hline
+		\end{tabular}
+	}
+	\caption{列表操作函数}
+\end{table}
+
+\vspace{0.5cm}
+
+\mybox{列表内容扩充}
+
+\begin{lstlisting}[language=Python]
+lst = list(range(5))    # [0, 1, 2, 3, 4]
+lst.append(5)           # [0, 1, 2, 3, 4, 5]
+lst.insert(2, 6)        # [0, 1, 6, 2, 3, 4, 5]
+print(lst)
+print("列表长度：%d" % len(lst))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+[0, 1, 6, 2, 3, 4, 5]
+列表长度：7
+\end{verbatim}
+\end{tcolorbox}
+
+在使用remove()删除的时候，内容存在可以删除，不存在就会抛出ValueError异常信息，因此使用remove()操作之前一定要通过in判断。\\
+
+如果不知道内容要进行数据的删除，最简单的原始的Python支持可以采用del关键字实现内容删除，而且使用del的时候只需要知道列表数据的索引即可实现。使用del关键字的确可以实现索引的删除，但是无法知道被删除了哪些数据。\\
+
+pop()可以根据索引删除，而后告诉用户哪些数据被删除了。\\
+
+\mybox{删除元素}
+
+\begin{lstlisting}[language=Python]
+lst = list(range(5))    # [0, 1, 2, 3, 4]
+key = 3
+
+if key in lst:
+    lst.remove(key)
+print(lst)              # [0, 1, 2, 4]
+
+del lst[2]
+print(lst)              # [0, 1, 4]
+
+print(lst.pop(1))       # 1
+print(lst)              # [0, 4]
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+[0, 1, 2, 4]
+[0, 1, 4]
+1
+[0, 4]
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\mybox{列表反转/排序}
+
+\begin{lstlisting}[language=Python]
+lst = [7, 4, 0, 3, 6, 8, 9, 2]
+
+print("原始列表：", end='')
+print(lst)
+
+print("反转：", end='')
+lst.reverse()
+print(lst)
+
+print("排序（升序）：", end='')
+lst.sort()
+print(lst)
+
+print("排序（降序）：", end='')
+lst.sort(reverse=True)
+print(lst)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+原始列表：[7, 4, 0, 3, 6, 8, 9, 2]
+反转：[2, 9, 8, 6, 3, 0, 4, 7]
+排序（升序）：[0, 2, 3, 4, 6, 7, 8, 9]
+排序（降序）：[9, 8, 7, 6, 4, 3, 2, 0]
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{元组}
+
+\subsection{元组（Tuple）}
+
+列表是可以进行多个数据的保存，并且里面的内容都是可以修改和动态扩充的。与列表不一样，Python提供了一个不可变的数据的序列——元组，元组需要使用【()】进行定义。元组定义的时候如果只有一个内容，必须要有【,】。\\
+
+\mybox{元组}
+
+\begin{lstlisting}[language=Python]
+tup = (0, 1, 2, 3, 4)
+print(tup)
+tup[0] = 5
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+(0, 1, 2, 3, 4)
+TypeError: 'tuple' object does not support item assignment
+\end{verbatim}
+\end{tcolorbox}
+
+tuple()可以实现列表与元组的转换。\\
+
+\mybox{元组与列表的转换}
+
+\begin{lstlisting}[language=Python]
+lst = list(range(5))
+print(lst)
+print(type(lst))
+
+tup = tuple(lst)
+print(tup)
+print(type(tup))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+[0, 1, 2, 3, 4]
+<class 'list'>
+(0, 1, 2, 3, 4)
+<class 'tuple'>
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{序列统计函数}
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{函数} & \textbf{功能}                              \\
+			\hline
+			len()         & 获取序列的长度                             \\
+			\hline
+			max()         & 获取序列中的最大值                         \\
+			\hline
+			min()         & 获取序列中的最小值                         \\
+			\hline
+			sum()         & 计算序列中的内容总和                       \\
+			\hline
+			any()         & 序列中有一个为True结果为True，否则为False  \\
+			\hline
+			all()         & 序列中有一个为False结果为False，否则为True \\
+			\hline
+		\end{tabular}
+	}
+	\caption{序列统计函数}
+\end{table}
+
+\vspace{0.5cm}
+
+\mybox{序列统计函数}
+
+\begin{lstlisting}[language=Python]
+lst = [4, 0, 1, 3, 2]
+tup = (8, 5, 7, 9, 6)
+str = "HelloWorld"
+
+print("列表lst的长度 = %d" % len(lst))
+print("元组tup的长度 = %d" % len(tup))
+print("字符串str的长度 = %d" % len(str))
+
+print("列表lst最大值：%d" % max(lst))
+print("元组tup最小值 = %d" % min(tup))
+print("字符串str最大值 = %c" % max(str))
+print("字符串str最小值 = %c" % min(str))
+
+print("列表lst总和：%d" % sum(lst))
+print("元组tup总和：%d" % sum(tup))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+列表lst的长度 = 5
+元组tup的长度 = 5
+字符串str的长度 = 10
+列表lst最大值：4
+元组tup最小值 = 5
+字符串str最大值 = r
+字符串str最小值 = H
+列表lst总和：10
+元组tup总和：35
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{字符串}
+
+\subsection{字符串（String）}
+
+字符串是由若干个字符所组成的，使用引号进行一串内容的声明。字符串也可以进行数据的分片操作和序列统计函数。\\
+
+\mybox{字符串}
+
+\begin{lstlisting}[language=Python]
+info = "url: www.baidu.com"
+
+print("字符串长度：%d" % len(info))
+
+if "url: " in info:
+    print(info[5:])
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+字符串长度：18
+www.baidu.com
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{字符串格式化}
+
+在Python默认的语言环境中有字符串格式化的处理支持。为了进一步完善对于字符串格式化的需求，又提供了format()。在format()里面出现的【\{\}】标记里面可以定义标记名称或者数据的填充序列顺序定义。\\
+
+\mybox{字符串格式化}
+
+\begin{lstlisting}[language=Python]
+name = "小灰"
+age = 16
+height = 175.6
+
+info = "姓名：%s，年龄：%d，身高：%.2f" % (name, age, height)
+print(info)
+
+info = "姓名：{}，年龄：{}，身高：{}".format(name, age, height)
+print(info)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+姓名：小灰，年龄：16，身高：175.60
+姓名：小灰，年龄：16，身高：175.6
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{字符串数据处理函数}
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{函数}               & \textbf{功能}                        \\
+			\hline
+			center()                    & 字符串居中显示                       \\
+			\hline
+			find(data)                  & 查找到内容返回索引位置，找不到返回-1 \\
+			\hline
+			join(data)                  & 字符串连接                           \\
+			\hline
+			split(data [, limit])       & 字符串拆分                           \\
+			\hline
+			lower()                     & 字符串转小写                         \\
+			\hline
+			upper()                     & 字符串转大写                         \\
+			\hline
+			capitalize()                & 首字母大写                           \\
+			\hline
+			replace(old, new [, limit]) & 字符串替换                           \\
+			\hline
+			strip()                     & 删除左右空格                         \\
+			\hline
+		\end{tabular}
+	}
+	\caption{字符串数据处理函数}
+\end{table}
+
+\subsubsection{字符串大小写转换}
+
+\vspace{0.5cm}
+
+\mybox{字符串大小写转换}
+
+\begin{lstlisting}[language=Python]
+str = "Hello World!"
+print(str.upper())
+print(str.lower())
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+HELLO WORLD!
+hello world!
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字符串查找find()}
+
+在进行数据内容查询的时候，如果内容存在就返回索引位置，不存在则返回-1。\\
+
+\mybox{字符串查找}
+
+\begin{lstlisting}[language=Python]
+str = "Hello World!"
+print(str.find("Wor"))
+print(str.find("Python"))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+6
+-1
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字符串连接join()}
+
+使用一个特定的字符串连接序列中的若干内容。\\
+
+\mybox{字符串连接}
+
+\begin{lstlisting}[language=Python]
+lst = ["www", "baidu", "com"]
+url = ".".join(lst)
+print(url)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+www.baidu.com
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字符串拆分split()}
+
+\vspace{0.5cm}
+
+\mybox{字符串拆分}
+
+\begin{lstlisting}[language=Python]
+ip = "127.0.0.1"
+print("ip信息：%s" % ip.split("."))
+
+date_time = "2021/03/31 17:32:53"
+item = date_time.split(" ")
+print("date信息：%s" % item[0].split("/"))
+print("time信息：%s" % item[1].split(":"))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+ip信息：['127', '0', '0', '1']
+date信息：['2021', '03', '31']
+time信息：['17', '32', '53']
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字符串替换replace()}
+
+使用一个字符串去替换其它的字符串，在进行字符串替换的时候可以设置替换的次数。replace()的替换是进行全匹配的替换操作。\\
+
+\mybox{字符串替换}
+
+\begin{lstlisting}[language=Python]
+str = "Hello World, Hello Python!"
+print("全部替换：" + str.replace("Hello", "Hey"))
+print("部分替换：" + str.replace("Hello", "Hey", 1))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+全部替换：Hey World, Hey Python!
+部分替换：Hey World, Hello Python!
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字符串去除前后空格strip()}
+
+在用户键盘数据输入的过程中，有可能用户在输入信息时会添加无用的空格，导致数据判断错误。对于用户输入数据需要进行左右空格的删除。\\
+
+\mybox{模拟登陆}
+
+\begin{lstlisting}[language=Python]
+while True:
+    info = input("Username:Password >>> ")
+    if len(info) == 0 or info.find(":") == -1:
+        print("输入格式错误！")
+    else:
+        data = info.split(":")
+        username = data[0]
+        password = data[1]
+        if username == "admin" and password == "123456":
+            print("欢迎【%s】成功登录！" % username)
+            break
+        else:
+            print("用户名或密码错误！")
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+Username:Password >>> hey:
+用户名或密码错误！
+Username:Password >>> admin
+输入格式错误！
+Username:Password >>> admin:123456
+欢迎【admin】成功登录！
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{字典}
+
+\subsection{字典（Dictionary）}
+
+字典是一个在开发之中极为重要的类型，字典提供了非常方便地数据内容查找操作。字典的本质就是一个数据查找的序列，与之前的列表或者元组不同的地方在于，其它的结构保存数据的目的都是为了输出使用，而字典是为了查询使用。\\
+
+字典严格意义上来讲属于一种哈希表的结构，在哈希表进行数据存储的时候往往都需要一个哈希算法进行数据存储位置的计算。\\
+
+字典是一个二元偶对象的集合，所以里面保存的数据都是成对的，所有的数据内容都按照key = value的形式进行存放。考虑到用户使用的方便，key的类型可以使数字、字符串或者是元组，但是最为常见的还是字符串。\\
+
+在使用字典进行查询的时候如果指定的key不存在，则在代码执行会出现KeyError错误提示信息，也就是原生的数据查询方式是有可能会抛出异常的。\\
+
+字典的本质是根据key查找对应的value，一旦key重复的时候，使用新的数据覆盖掉旧的数据。\\
+
+\mybox{字典}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+print(info)
+print(info["age"])
+
+info["height"] = 180
+print(info)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+{'name': '小灰', 'age': 16, 'height': 175.6}
+16
+{'name': '小灰', 'age': 16, 'height': 180}
+\end{verbatim}
+\end{tcolorbox}
+
+既然字典是一个序列，那么字典可以使用in进行判断指定key是否存在，通过这样的机制可以避免由于key不存在所带来的KeyError异常的抛出。\\
+
+
+同样，字典也可以使用for循环迭代输出，但是迭代的知识字典中全部的key。\\
+
+\mybox{字典迭代输出}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+for key in info:
+    print("%s: %s" % (key, info[key]))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+name: 小灰
+age: 16
+height: 175.6
+\end{verbatim}
+\end{tcolorbox}
+
+在进行字典数据迭代输出的时候，最好的做法是每一次迭代直接返回当前完整的key:value的映射项，此时的处理就需要依赖items()来完成。\\
+
+\mybox{items()迭代输出}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+for key, value in info.items():
+    print("%s: %s" % (key, value))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+name: 小灰
+age: 16
+height: 175.6
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{字典操作函数}
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{函数}            & \textbf{功能}             \\
+			\hline
+			clear()                  & 清空字典数据              \\
+			\hline
+			update(\{k:v, ...\})     & 更新字典数据              \\
+			\hline
+			get(key[, defaultvalue]) & 根据key获取数据           \\
+			\hline
+			pop(key)                 & 弹出字典中指定的key数据   \\
+			\hline
+			popitem()                & 从字典中弹出一组映射项    \\
+			\hline
+			keys()                   & 返回字典中全部key数据     \\
+			\hline
+			values()                 & 返回字典中全部的value数据 \\
+			\hline
+		\end{tabular}
+	}
+	\caption{字典操作函数}
+\end{table}
+
+\subsubsection{字典数据更新update()}
+
+Python中的字典是可以进行存储数据的动态扩充的，update()除了拥有表面上的更新之外，也拥有数据的扩充操作。\\
+
+\mybox{字典数据更新update()}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+info.update({"city": "Shanghai", "job": "programmer"})
+print(info)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+{'name': '小灰', 'age': 16, 'height': 175.6,
+'city': 'Shanghai', 'job': 'programmer'}
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字典数据删除pop()}
+
+pop()可以根据key进行弹出操作。\\
+
+\mybox{字典数据删除}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+print(info.pop("age"))
+print(info)
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+16
+{'name': '小灰', 'height': 175.6}
+\end{verbatim}
+\end{tcolorbox}
+
+\subsubsection{字典数据获取get()}
+
+可以通过key获取数据，如果key不存在则返回None。\\
+
+\mybox{字典数据获取}
+
+\begin{lstlisting}[language=Python]
+info = {"name": "小灰", "age": 16, "height": 175.6}
+print(info.get("name"))
+print(info.get("job"))
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+小灰
+None
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
