@@ -1,0 +1,210 @@
+\chapter{正则表达式}
+
+\section{正则表达式}
+
+\subsection{正则表达式（Regular Expression）}
+
+正则表达式是一种利用特殊符号实现的字符串处理操作，正则的主要围绕着字符串的拆分、替换、匹配的实现支持。现在基本主流的编程语言都有正则的支持。\\
+
+Python需要引入re模块使用正则，re模块中提供了一些基本的匹配、过滤、搜索、拆分等操作的函数。\\
+
+正则表达式最常见的一项功能就是进行字符串的匹配，在进行匹配的时候可以使用正则标记符号或者使用完整的字符串来匹配。\\
+
+\mybox{从头匹配}
+
+\begin{lstlisting}[language=Python]
+import re
+
+def main():
+    # 匹配成功返回Match类对象
+    print("从头匹配：%s" % re.match("Hello", "Hello World"))
+    print("不匹配：%s" % re.match("World", "Hello World"))
+    # re.I / re.IGNORECASE表示忽略大小写比较
+    print("忽略大小写：%s" % re.match("HELLO", "Hello World", re.I))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+从头匹配：<re.Match object; span=(0, 5), match='Hello'>
+不匹配：None
+忽略大小写：<re.Match object; span=(0, 5), match='Hello'>
+\end{verbatim}
+\end{tcolorbox}
+
+match()只能从头匹配，如果需要匹配任意位置上的字符串信息，就可以通过search()完成匹配。\\
+
+\mybox{任意位置匹配}
+
+\begin{lstlisting}[language=Python]
+import re
+
+def main():
+    print("任意位置匹配：%s" % re.search(
+            "python", "https://www.python.org/"))
+    print("忽略大小写：%s" % re.search(
+            "PYTHON", "https://www.python.org/", re.I))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+任意位置匹配：<re.Match object; span=(12, 18), match='python'>
+忽略大小写：<re.Match object; span=(12, 18), match='python'>
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{正则表达式的优势}
+
+\mybox{使用与不使用正则表达式的区别}
+
+\begin{lstlisting}[language=Python]
+import re
+
+"""
+    验证一个字符串是否是一个合法的账号
+    规则：
+        1. 纯数字组成
+        2. 不能以0开头
+        3. 长度[6, 11]
+"""
+
+def validate_account(account):
+    # 1. 纯数字组成
+    if not account.isnumeric():
+        return False
+    
+    # 2. 不能以0开头
+    if account.startswith("0"):
+        return False
+    
+    # 3. 长度[6, 11]
+    if len(account) < 6 or len(account) > 11:
+        return False
+    
+    return True
+
+def validate_account_with_regex(account):
+    # 第1位数字为[1-9]，后面[0-9]可重复5-10次
+    return re.match("[1-9]\\d{5,10}", account) != None
+
+def main():
+    # 不使用正则表达式
+    print(validate_account("2513276112"))
+    print(validate_account("012.3"))
+
+    # 使用正则表达式
+    print(validate_account_with_regex("h3ll0"))
+    print(validate_account_with_regex("28368346"))
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+True
+False
+False
+True
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{正则匹配}
+
+\subsection{匹配规则}
+
+正则表达式的匹配规则是逐个字符进行匹配，判断是否和正则表达式中定义的规则一致。
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{4mm}{
+		\begin{tabular}{|c|l|}
+			\hline
+			\textbf{元字符} & \textbf{功能}                                                      \\
+			\hline
+			\^{}            & 匹配一个字符串的开头                                               \\
+			\hline
+			\$              & 匹配一个字符串的结尾                                               \\
+			\hline
+			[]              & 匹配一位字符，例如[abc]、[a-z]、[a-zA-Z]、[\^{}abc]（除a、b、c）   \\
+			\hline
+			$ \backslash $  & 转义字符                                                           \\
+			\hline
+			$ \backslash $d & 匹配所有的数字，等同于[0-9]                                        \\
+			\hline
+			$ \backslash $D & 匹配所有的非数字，等同于[\^{}0-9]                                  \\
+			\hline
+			$ \backslash $w & 匹配所有的单词字符，等同于[a-zA-Z0-9\_]                            \\
+			\hline
+			$ \backslash $W & 匹配所有的非单词字符，等同于[\^{}a-zA-Z0-9\_]                      \\
+			\hline
+			.               & 通配符，可以匹配一个任意的字符                                     \\
+			\hline
+			+               & 前面的一位或者一组字符，连续出现了一次或多次                       \\
+			\hline
+			?               & 前面的一位或者一组字符，连续出现了一次或零次                       \\
+			\hline
+			*               & 前面的一位或者一组字符，连续出现了零次、一次或多次                 \\
+			\hline
+			\{\}            & 连续出现次数，\{m\}：m次，\{m,\}：至少m次，\{m,n\}：m $ \sim $ n次 \\
+			\hline
+			()              & 分组，把某些连续的字符视为一个整体对待                             \\
+			\hline
+			|               & 任意一个部分，例如abc|123表示可以是abc，也可以是123                \\
+			\hline
+		\end{tabular}
+	}
+	\caption{元字符}
+\end{table}
+
+\vspace{0.5cm}
+
+\mybox{验证合法性}
+
+\begin{lstlisting}[language=Python]
+import re
+
+def main():
+    # 1. 验证QQ账号：长度5-11，首位不为0
+    print(re.match("[1-9]\\d{4,10}", "2513276112"))
+
+    # 2. 验证QQ邮箱：QQ号码@qq.com
+    print(re.match("[1-9]\\d{4,10}@qq\\.com", "2513276112@qq.com"))
+
+    # 3. 验证手机号
+    print(re.match("1[356789]\\d{9}", "13671712345"))
+
+    # 4. 验证固定电话：区号（3-4位）-电话号码（8位）
+    print(re.match("\\d{3,4}-\\d{8}", "021-55031234"))
+
+    # 验证126或163邮箱：邮箱名（4-12位有效字符）@126/163.com
+    print(re.match("\\w{4,12}@(126|163)\\.com", "admin123@163.com"))
+    
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+<re.Match object; span=(0, 10), match='2513276112'>
+<re.Match object; span=(0, 17), match='2513276112@qq.com'>
+<re.Match object; span=(0, 11), match='13671712345'>
+<re.Match object; span=(0, 12), match='021-55031234'>
+<re.Match object; span=(0, 16), match='admin123@163.com'>
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage

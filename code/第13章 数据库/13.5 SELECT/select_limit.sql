@@ -1,1 +1,0 @@
-SELECT name AS student_name, gpa FROM info LIMIT 4;

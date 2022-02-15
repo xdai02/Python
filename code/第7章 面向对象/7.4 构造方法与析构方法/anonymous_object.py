@@ -7,7 +7,7 @@ class Person:
         return "姓名：%s，年龄：%d" % (self.__name, self.__age)
 
 def main():
-    print(Person("小灰", 16).get_info())
+    print(Person("小灰", 17).get_info())
 
 if __name__ == "__main__":
     main()

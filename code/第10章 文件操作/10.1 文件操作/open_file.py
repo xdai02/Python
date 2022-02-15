@@ -1,5 +1,5 @@
 def main():
-    file = open(file="data.txt", mode="w")
+    file = open(file="test.txt", mode="w")
     print("文件名称：%s" % file.name)
     print("访问模式：%s" % file.mode)
     print("文件状态：%s" % file.closed)

@@ -1,9 +1,9 @@
 import os
 
-PATH = "第10章 文件操作" + os.sep + "10.3 os模块" + os.sep + "data.txt"
+PATH = "code" + os.sep +"第10章 文件操作" + os.sep \
+        + "10.3 os模块" + os.sep + "data.txt"
 
 def main():
-    # 路径存在
     if os.path.exists(PATH):
         print("绝对路径：%s" % os.path.abspath(PATH))
         print("文件名称：%s" % os.path.basename(PATH))

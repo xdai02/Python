@@ -14,7 +14,7 @@ class Person:
 def main():
     person = Person()
     person.set_name("小灰")
-    person.set_age(16)
+    person.set_age(17)
     print("姓名：%s，年龄：%d" % (
             person.get_name(), person.get_age()))
 

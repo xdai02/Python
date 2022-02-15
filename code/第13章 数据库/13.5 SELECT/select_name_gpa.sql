@@ -1,1 +1,0 @@
-SELECT name, gpa FROM info;

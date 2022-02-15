@@ -1,0 +1,192 @@
+\chapter{测试}
+
+\section{功能测试}
+
+\subsection{功能测试}
+
+当开发者编写完成一个功能之后实际上该操作代码是不可能立即被使用的，往往都需要进行各种测试，以保证程序的正确性。程序的测试分为非标准化和标准化两种分类。\\
+
+之前所编写的代码都有相应的主函数进行功能调用，如果调用的结果与预期的相符，那么就认为改代码没有任何问题，这种操作就属于一种最简单的功能测试。所以这样的测试是正确的，但是却少了通用性。在Python中为了方便进行通用性测试，提供了doctest和unittest两类第三方测试工具。\\
+
+\subsection{doctest文档测试}
+
+doctest是一种基于文档模式实现的测试操作，可以将所有需要测试的代码放在文档里面编写测试程序。如果测试正确，那么代码可以正常执行完毕，但是如果出现测试失败的情况则会将错误信息输出。\\
+
+\mybox{doctest文档测试}
+
+\begin{lstlisting}[language=Python]
+import doctest
+
+def multiply(item1, item2):
+    """
+        乘法运算：
+        如果item1和item2都是数字，那么结果为两数之和
+        如果item1是序列，item2是数字，那么结果为重复item2次的序列
+
+        >>> multiply(5, 6)
+        30
+        >>> multiply('Hello', 3)
+        'HelloHelloHello'
+    """
+    return item1 * item2
+
+def main():
+    doctest.testmod(verbose=True)   # 生成详细输出
+
+if __name__ == "__main__":
+    main()
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+Trying:
+    multiply(5, 6)
+Expecting:
+    30
+ok
+Trying:
+    multiply('Hello', 3)
+Expecting:
+    'HelloHelloHello'
+ok
+2 items had no tests:
+    __main__
+    __main__.main
+1 items passed all tests:
+    2 tests in __main__.multiply
+2 tests in 3 items.
+2 passed and 0 failed.
+Test passed.
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{unittest用例测试}
+
+unittest实现的是单元测试组件，在实际项目的开发过程之中，更加推荐此类形式实现测试用例（use case）的编写。这个组件是需要单独定义专属的测试类的。\\
+
+\mybox{unittest用例测试}
+
+\begin{lstlisting}[language=Python, title=caesar\_cipher.py]
+class CaesarCipher:
+    """
+        凯撒加密
+    """
+    def __init__(self, key=3):
+        """
+            凯撒加密
+            Args:
+                key (int): 默认位移量为3
+        """
+        self.key = key
+    
+    def encrypt(self, plaintext):
+        """
+            凯撒加密
+            加密算法：ciphertext[i] = (plaintext[i] + Key) % 128
+            Args:
+                plaintext (str): 明文
+            Returns:
+                [str]: 密文
+        """
+        ciphertext = ""
+        for i in range(len(plaintext)):
+            ciphertext += chr((ord(plaintext[i]) + self.key) % 128)
+        return ciphertext
+    
+    def decrypt(self, ciphertext):
+        """
+            凯撒解密
+            解密算法：plaintext[i] = (ciphertext[i] - key + 128) % 128
+            Args:
+                ciphertext (str): 密文
+            Returns:
+                [str]: 明文
+        """
+        plaintext = ""
+        for i in range(len(ciphertext)):
+            plaintext += chr(
+                    (ord(ciphertext[i]) - self.key + 128) % 128
+                )
+        return plaintext
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, title=test\_caesar\_cipher.py]
+from caesar_cipher import CaesarCipher
+import unittest
+
+class TestCaesarCipher(unittest.TestCase):  # 继承TestCase父类
+    def test_encrypt(self):
+        caesar_cipher = CaesarCipher()
+        self.assertEqual(
+        caesar_cipher.encrypt("Hello World!"), 
+        "Khoor#Zruog$"
+    )
+    
+    def test_decrypt(self):
+        caesar_cipher = CaesarCipher()
+        self.assertEqual(
+        caesar_cipher.decrypt("Khoor#Zruog$"),
+        "Hello World!"
+    )
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{命令行运行}
+	\begin{verbatim}
+python -m unittest
+
+..
+--------------------------------------------------------------
+Ran 2 tests in 0.000s
+
+OK
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+
+\section{性能测试}
+
+\subsection{性能测试}
+
+功能测试只能保证代码的执行是否正确，代码的执行是否快是性能测试的主要目的。性能测试主要是分析功能的执行速度、CPU占用率等。\\
+
+在Python中提供了一个profile性能分析模块，与之对应的还有一个cProfile模块（通过C语言编写的测试模块）。\\
+
+\mybox{性能分析}
+
+\begin{lstlisting}[language=Python]
+import random
+import cProfile
+
+def bubble_sort(list):
+    n = len(list)
+    for i in range(n):
+        for j in range(n-i-1):
+            if list[j] > list[j+1]:
+                list[j], list[j+1] = list[j+1], list[j]
+
+lst = random.choices(range(1000), k=10000)
+cProfile.run("bubble_sort(lst)")
+\end{lstlisting}
+
+运行结果中的各项指标分别表示：
+
+\begin{itemize}
+	\item ncalls：函数调用次数。
+
+	\item tottime：函数总共运行的时间。
+
+	\item percall：函数运行一次的平均时间，等同于tottime / ncalls。
+
+	\item cumtime：函数总计运行时间。
+
+	\item percall：函数运行一次的平均时间，等同于cumtime / ncalls。
+
+	\item filename:lineno(function)：函数所在文件名称、代码行数、函数名称。
+\end{itemize}
+
+\newpage
