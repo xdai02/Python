@@ -52,7 +52,10 @@ class MainForm:
             self.column = 0
             for button in group:
                 # 绑定事件
-                button.bind("<Button-1>", lambda event: self.button_handler(event))
+                button.bind(
+                    "<Button-1>",
+                    lambda event: self.button_handler(event)
+                )
                 button.grid(row=self.row, column=self.column)
                 self.column += 1
             self.row += 1
