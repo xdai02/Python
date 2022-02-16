@@ -10,7 +10,7 @@ def main():
 
     # 磁盘信息
     print("【磁盘】全部磁盘信息：%s" % psutil.disk_partitions())
-    print("【磁盘】D盘使用率：%s" % str(psutil.disk_usage("D:")))   # 默认为C盘
+    print("【磁盘】D盘使用率：%s" % str(psutil.disk_usage("D:")))
     print("【磁盘】IO使用率：%s" % str(psutil.disk_io_counters()))
 
     # 网络信息
