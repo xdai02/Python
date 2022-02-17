@@ -4,16 +4,15 @@
 
 \subsection{文件操作}
 
-计算机除了拥有计算的能力之外，一定要有数据的存储能力，而对于数据的存储一般就可以通过文件的形式来完成。在Python中直接提供有文件的I/O（Input/Output）处理函数操作，利用这些函数可以方便地实现读取和写入。\\
+计算机对于数据的存储一般可以通过文件的形式来完成。Python中直接提供有文件的I/O（Input/Output）处理函数操作，能够方便地实现读取和写入。\\
 
 open()的功能是进行文件的打开，在进行文件打开的时候如果不设置任何的模式类型，则默认为r（只读模式）。
 
 \vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
-def open(
-    file, mode='r', buffering=None, encoding=None,
-    errors=None, newline=None, closefd=True
+def open(file, mode='r', buffering=None, encoding=None,
+    	errors=None, newline=None, closefd=True
 )
 \end{lstlisting}
 
@@ -76,7 +75,7 @@ if __name__ == "__main__":
 
 \subsection{文件读写}
 
-当使用open()打开一个文件之后，接下来可以使用创建的文件对象进行读写操作。
+当使用open()打开一个文件后，就可以使用创建的文件对象进行读写操作。
 
 \begin{table}[H]
 	\centering
@@ -87,8 +86,6 @@ if __name__ == "__main__":
 			\hline
 			def close(self)                           & 关闭文件资源                   \\
 			\hline
-			def fileno(self)                          & 获取文件描述符                 \\
-			\hline
 			def flush(self)                           & 强制刷新缓冲区                 \\
 			\hline
 			def read(self, n: int = -1)               & 默认读取全部，也可设置读取个数 \\
@@ -96,10 +93,6 @@ if __name__ == "__main__":
 			def readlines(self, hint: int = -1)       & 读取所有数据行，以列表形式返回 \\
 			\hline
 			def readline(self, limit: int = -1)       & 读取每行数据，也可设置读取个数 \\
-			\hline
-			def truncate(self, size: int = None)      & 文件截取                       \\
-			\hline
-			def writable(self)                        & 判断文件是否可以写入           \\
 			\hline
 			def write(self, s: AnyStr)                & 文件写入                       \\
 			\hline
@@ -176,7 +169,18 @@ if __name__ == "__main__":
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.9]{img/C10/10-2/1.png}
+	\begin{tikzpicture}[scale=0.7]
+		\draw[rounded corners] (0,0) rectangle (3,2);
+		\draw[rounded corners] (6,0) rectangle (9,2);
+		\draw[rounded corners] (12,0) rectangle (15,2);
+
+		\draw (1.5,1) node {write()};
+		\draw (7.5,1) node {缓冲区};
+		\draw (13.5,1) node {文件};
+
+		\draw[->] (3,1) -- (6,1);
+		\draw[->] (9,1) -- (12,1);
+	\end{tikzpicture}
 	\caption{文件缓冲}
 \end{figure}
 

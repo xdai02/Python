@@ -4,23 +4,7 @@
 
 \subsection{中央处理器（CPU, Central Process Unit）}
 
-CPU作为计算机系统的运算和控制核心，是信息处理、程序运行的最终执行单元。
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.7]{img/C11/11-1/1.png}
-	\caption{CPU结构}
-\end{figure}
-
-Python中可以通过multiprocessing模块获取计算机CPU的内核数量。\\
-
-\mybox{获取CPU可用数量}
-
-\begin{lstlisting}[language=Python]
-import multiprocessing	# 导入多进程模块
-# 获取CPU的可用数量
-print("CPU内核数量：%d" % multiprocessing.cpu_count())
-\end{lstlisting}
+CPU作为计算机系统的运算和控制核心，是信息处理、程序运行的最终执行单元。\\
 
 CPU的核心部分有：
 
@@ -32,17 +16,21 @@ CPU的核心部分有：
 	\item 寄存器（register）：寄存器是有限存贮容量的高速存贮部件，它们可用来暂存指令、数据和地址。
 \end{itemize}
 
+Python中可以通过multiprocessing模块获取计算机CPU的内核数量。\\
+
+\mybox{获取CPU可用数量}
+
+\begin{lstlisting}[language=Python]
+import multiprocessing	# 导入多进程模块
+# 获取CPU的可用数量
+print("CPU内核数量：%d" % multiprocessing.cpu_count())
+\end{lstlisting}
+
 \vspace{0.5cm}
 
 \subsection{进程（Process）}
 
-Windows任务管理器提供了有关计算机性能的信息，并显示了计算机上所运行的程序和进程的详细信息。
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.6]{img/C11/11-1/2.png}
-	\caption{Windows进程}
-\end{figure}
+Windows任务管理器提供了有关计算机性能的信息，并显示了计算机上所运行的程序和进程的详细信息。\\
 
 进程指的是一个具有一定独立功能的程序关于某个数据集合的一次运行活动。进程是系统进行资源分配和调度运行的基本单位。进程实体中包含三个组成部分：
 
@@ -58,29 +46,15 @@ Windows任务管理器提供了有关计算机性能的信息，并显示了计�
 
 并发编程是一种有效提高操作系统（服务器）性能的技术手段，现代的操作系统之中最为重要的代表就是并发性，例如现在的CPU都属于多核CPU。\\
 
-早期的DOS操作系统有一个非常重要的特征：一旦系统沾染了病毒，那么所有的程序就无法直接执行了。因为传统的DOS系统属于单进程模型，在同一个时间段上只能运行一个程序，病毒程序运行了，其它程序自然就无法运行。\\
+早期的DOS操作系统有一个非常重要的特征，一旦系统沾染了病毒，那么所有的程序就无法直接执行了。因为传统的DOS系统属于单进程模型，在同一个时间段上只能运行一个程序，病毒程序运行了，其它程序自然就无法运行。\\
 
-后来到了Windows操作系统，即便有病毒，也可以正常执行。这采用的是多进程的编程模型，同一时间段上可以同时运行多个程序。
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.6]{img/C11/11-1/3.png}
-	\caption{并发编程}
-\end{figure}
-
-只要打开Windows的任务管理器，就可以直接清楚发现所有正在执行的并行进程。
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.7]{img/C11/11-1/4.png}
-	\caption{任务管理器}
-\end{figure}
+后来到了Windows操作系统，即便有病毒，也可以正常执行。这采用的是多进程的编程模型，同一时间段上可以同时运行多个程序。只要打开Windows的任务管理器，就可以直接清楚发现所有正在执行的并行进程。\\
 
 在早期的硬件系统之中由于没有多核CPU的设计，利用时间片的轮转算法（Round Robin），保证在同一个时间段可以同时执行多个进行，但是在某一个时间点上只允许执行一个进程，可以实现资源的切换。
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.6]{img/C11/11-1/5.png}
+	\includegraphics[scale=0.6]{img/C11/11-1/1.png}
 	\caption{时间片轮转算法}
 \end{figure}
 
@@ -106,6 +80,18 @@ Windows任务管理器提供了有关计算机性能的信息，并显示了计�
 
 所有的进程从其创建到销毁都有各自的生命周期，进程要经过如下几个阶段：
 
+\begin{enumerate}
+	\item 创建状态：系统已经为其分配了PCB（可以获取进程的而信息），但是所需要执行的进程的上下文环境（context）还未分配，所以这个时候的进程还无法被调度。
+
+	\item 就绪状态：该进程已经分配到除CPU之外的全部资源，并等待CPU调度。
+
+	\item 执行状态：进程已获得CPU资源，开始正常提供服务。
+
+	\item 阻塞状态：所有的进程不可能一直抢占CPU，依据资源调度的算法，每一个进程运行一段时间之后，都需要交出当前的CPU资源，给其它进程执行。
+
+	\item 终止状态：某一个进程达到了自然终止的状态，或者进行了强制性的停止，那么进程将进入到终止状态，进程将不再被执行。
+\end{enumerate}
+
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}[node distance=4.5cm,thick,auto]
@@ -124,18 +110,6 @@ Windows任务管理器提供了有关计算机性能的信息，并显示了计�
 	\end{tikzpicture}
 	\caption{五态模型}
 \end{figure}
-
-\begin{enumerate}
-	\item 创建状态：系统已经为其分配了PCB（可以获取进程的而信息），但是所需要执行的进程的上下文环境（context）还未分配，所以这个时候的进程还无法被调度。
-
-	\item 就绪状态：该进程已经分配到除CPU之外的全部资源，并等待CPU调度。
-
-	\item 执行状态：进程已获得CPU资源，开始正常提供服务。
-
-	\item 阻塞状态：所有的进程不可能一直抢占CPU，依据资源调度的算法，每一个进程运行一段时间之后，都需要交出当前的CPU资源，给其它进程执行。
-
-	\item 终止状态：某一个进程达到了自然终止的状态，或者进行了强制性的停止，那么进程将进入到终止状态，进程将不再被执行。
-\end{enumerate}
 
 \newpage
 
@@ -302,7 +276,15 @@ if __name__ == "__main__":
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[]{img/C11/11-4/1.png}
+	\begin{tikzpicture}
+		\draw (0,0) rectangle node{工作进程} (2,1);
+		\draw (4,0) rectangle node{进程管道} (6,1);
+		\draw (8,0) rectangle node{工作进程} (10,1);
+		\draw[->] (2,0.75) -- (3,0.75) node[above]{写} -- (4,0.75);
+		\draw[<-] (2,0.25) -- (3,0.25) node[below]{读} -- (4,0.25);
+		\draw[->] (6,0.75) -- (7,0.75) node[above]{写} -- (8,0.75);
+		\draw[<-] (6,0.25) -- (7,0.25) node[below]{读} -- (8,0.25);
+	\end{tikzpicture}
 	\caption{进程间通信}
 \end{figure}
 
@@ -372,8 +354,14 @@ if __name__ == "__main__":
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.6]{img/C11/11-5/1.png}
-	\caption{进程队列}
+	\begin{tikzpicture}
+		\draw (0,0) rectangle node{生产进程} (2,1);
+		\draw (4,0) rectangle node{进程队列} (6,1);
+		\draw (8,0) rectangle node{消费进程} (10,1);
+		\draw[->] (2,0.5) -- (3,0.5) node[above]{put} -- (4,0.5);
+		\draw[->] (6,0.5) -- (7,0.5) node[above]{get} -- (8,0.5);
+	\end{tikzpicture}
+	\caption{生产者/消费者}
 \end{figure}
 
 multiprocessing.Queue是Python多进程编程中提供的进程队列结构，该队列采用FIFO的形式实现不同进程间的数据通讯，这样可以保证多个数据可以按序实现发送与接收处理。
@@ -569,12 +557,6 @@ if __name__ == "__main__":
 
 并发进程的执行如果要进行同步处理，那么就必须对一些核心代码进行同步。Python中提供了一个Lock同步锁机制，利用这种锁机制可以实现部分代码的同步锁定，保证每一次只允许有一个进程执行这部分的代码。
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[]{img/C11/11-6/1.png}
-	\caption{互斥锁}
-\end{figure}
-
 \begin{table}[H]
 	\centering
 	\setlength{\tabcolsep}{5mm}{
@@ -659,13 +641,7 @@ if __name__ == "__main__":
 
 Semaphore（信号量）是一种有限资源的进程同步管理机制。例如银行的业务办理，所有客户都会拿到一个号码，而后号码会被业务窗口叫号，被叫号的办理者就可以办理业务。\\
 
-Semaphore类本质上是一种带有计数功能的进程同步机制，acquire()减少计数，release()增加计数。当可用信号量的计数为0时，后续进程将被阻塞。
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.6]{img/C11/11-6/2.png}
-	\caption{Semaphore}
-\end{figure}
+Semaphore类本质上是一种带有计数功能的进程同步机制，acquire()减少计数，release()增加计数。当可用信号量的计数为0时，后续进程将被阻塞。\\
 
 Lock一般是针对于一个资源同步的，而Semaphore是针对有限资源的并行访问。\\
 
