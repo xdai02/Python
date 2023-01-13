@@ -391,32 +391,6 @@ time: 09:49:01
 
 \newpage
 
-\section{calendar模块}
-
-\subsection{calendar模块}
-
-calendar模块可以进行年历和日历的显示，同时也可以实现闰年的判断。\\
-
-\mybox{calendar模块}
-
-\begin{lstlisting}[language=Python]
-import calendar
-
-def main():
-    calendar.setfirstweekday(calendar.SUNDAY)
-    print(calendar.month(2021, 4))
-
-    print("2020是闰年吗？%s" % calendar.isleap(2020))
-    print("2000-3000年间闰年数量：%d" % calendar.leapdays(2000, 3000))
-
-    print(calendar.calendar(2021))
-
-if __name__ == "__main__":
-    main()
-\end{lstlisting}
-
-\newpage
-
 \section{copy模块}
 
 \subsection{copy模块}
