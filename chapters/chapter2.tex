@@ -1,13 +1,44 @@
-\chapter{判断}
+\chapter{分支}
 
 \section{逻辑运算符}
 
+\subsection{关系运算符}
+
+编程中经常需要使用关系运算符来比较两个数据的大小，比较的结果是一个布尔值（boolean），即True（非0）或False（0）。\\
+
+在编程中需要注意，一个等号=表示赋值运算，而两个等号==表示比较运算。\\
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|c|c|}
+			\hline
+			\textbf{数学符号} & \textbf{关系运算符} \\
+			\hline
+			$ < $             & <                   \\
+			\hline
+			$ > $             & >                   \\
+			\hline
+			$ \le $           & <=                  \\
+			\hline
+			$ \ge $           & >=                  \\
+			\hline
+			$ = $             & ==                  \\
+			\hline
+			$ \ne $           & !=                  \\
+			\hline
+		\end{tabular}
+	}
+\end{table}
+
+\vspace{0.5cm}
+
 \subsection{逻辑运算符}
 
-Python中逻辑运算符有三种：
+逻辑运算符用于连接多个关系表达式，其结果也是一个布尔值。\\
 
 \begin{enumerate}
-	\item 逻辑与and：当多个条件同时为真，结果为真。
+	\item 逻辑与and：当多个条件全部为True，结果为True。\\
 	      \begin{table}[H]
 		      \centering
 		      \setlength{\tabcolsep}{5mm}{
@@ -25,10 +56,9 @@ Python中逻辑运算符有三种：
 				      \hline
 			      \end{tabular}
 		      }
-		      \caption{逻辑与}
 	      \end{table}
 
-	\item 逻辑或or：多个条件有一个为真时，结果为真。
+	\item 逻辑或or：多个条件至少有一个为True时，结果为True。\\
 	      \begin{table}[H]
 		      \centering
 		      \setlength{\tabcolsep}{5mm}{
@@ -46,10 +76,9 @@ Python中逻辑运算符有三种：
 				      \hline
 			      \end{tabular}
 		      }
-		      \caption{逻辑或}
 	      \end{table}
 
-	\item 逻辑非not：条件为真时，结果为假；条件为假时，结果为真。
+	\item 逻辑非not：条件为True时，结果为False；条件为False时，结果为True。\\
 	      \begin{table}[H]
 		      \centering
 		      \setlength{\tabcolsep}{5mm}{
@@ -63,7 +92,6 @@ Python中逻辑运算符有三种：
 				      \hline
 			      \end{tabular}
 		      }
-		      \caption{逻辑非}
 	      \end{table}
 \end{enumerate}
 
@@ -73,106 +101,79 @@ Python中逻辑运算符有三种：
 
 \subsection{if}
 
-分支结构最大特征就是可以进行指定条件的判断处理，关键字为if、elif、else。\\
+if语句用于判断一个条件是否成立，如果成立则进入语句块，否则不执行。\\
 
-每一个满足条件之后的语句都可以有多条，并且在Python里面是利用缩进来确定语句的关系。使用逻辑运算符可以进行若干个条件的连接。
-
-\subsubsection{单分支}
-
-\vspace{-1cm}
+\mybox{年龄}
 
 \begin{lstlisting}[language=Python]
-age = 15
+age = int(input("Enter your age: "))
 if 0 < age < 18:
-    print("未成年")
-\end{lstlisting}
-
-\subsubsection{双分支}
-
-\vspace{-1cm}
-
-\begin{lstlisting}[language=Python]
-age = 30
-if 0 < age < 18:
-    print("未成年人")
-else:
-    print("成年人")
-\end{lstlisting}
-
-\subsubsection{多分支}
-
-\vspace{-1cm}
-
-\begin{lstlisting}[language=Python]
-score = 76
-
-if 90 <= score <= 100:
-    print("优秀")
-elif score >= 60:
-    print("合格")
-else:
-    print("不合格")
-\end{lstlisting}
-
-\vspace{0.5cm}
-
-\mybox{判断整数奇偶}
-
-\begin{lstlisting}[language=Python]
-num = int(input("输入一个正整数："))
-
-if num > 0:
-    if num % 2 == 0:
-        print("%d是偶数" % num)
-    else:
-        print("%d是奇数" % num)
+	print("Minor")
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-输入一个正整数：66
-66是偶数
+Enter your age: 17
+Minor
 \end{verbatim}
 \end{tcolorbox}
 
-\newpage
+\vspace{0.5cm}
 
-\section{断言}
+\subsection{if-else}
 
-\subsection{断言（Assertion）}
+if-else的结构与if类似，只是在if语句块中的条件不成立时，执行else语句块中的语句。\\
 
-设置断言表达式后，当满足条件时程序正常执行，当断言失败时，程序会中断执行。在进行断言时可以配置错误的提示信息，否则很难知道那块代码出现了错误。\\
-
-通过断言可以直接查找出程序的错误，但从另外一个角度来讲，断言由于不受到程序逻辑的控制，可能会造成许多的额外的问题，在实际的开发之中慎用。\\
-
-\mybox{断言}
+\mybox{闰年}
 
 \begin{lstlisting}[language=Python]
-import math
+year = int(input("Enter a year: "))
 
-print("计算三角形面积")
-a = float(input("第一条边："))
-b = float(input("第二条边："))
-c = float(input("第三条边："))
-
-assert a + b > c, "边长不合法"
-assert a + c > b, "边长不合法"
-assert b + c > a, "边长不合法"
-
-p = (a + b + c) / 2     # 半周长
-area = math.sqrt(p * (p-a) * (p-b) * (p-c)) # 海伦公式
-print("面积 = %.2f" % area)
+"""
+	A year is a leap year if it is
+	1. exactly divisible by 4, and not divisible by 100;
+	2. or is exactly divisible by 400
+"""
+if year % 4 == 0 and year % 100 != 0 or year % 400 == 0:
+	print("Leap year")
+else:
+	print("Common year")
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-计算三角形面积
-第一条边：1
-第二条边：1
-第三条边：2
-AssertionError: 边长不合法
+Enter a year: 2020
+Leap year
+\end{verbatim}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\subsection{if-elif-else}
+
+当需要对更多的条件进行判断时，可以使用if-elif-else语句。\\
+
+\mybox{字符}
+
+\begin{lstlisting}[language=Python]
+c = input("Enter a character: ")
+if c >= 'a' and c <= 'z':
+	print("Lowercase")
+elif c >= 'A' and c <= 'Z':
+	print("Uppercase")
+elif c >= '0' and c <= '9':
+	print("Digit")
+else:
+	print("Special character")
+\end{lstlisting}
+
+\begin{tcolorbox}
+	\mybox{运行结果}
+	\begin{verbatim}
+Enter a character: T
+Uppercase
 \end{verbatim}
 \end{tcolorbox}
 
