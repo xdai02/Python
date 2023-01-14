@@ -4,112 +4,59 @@
 
 \subsection{列表（List）}
 
-列表使用【[]】进行列表的定义，Python的列表是对于传统数组的更高级的实现。列表可以通过索引的形式进行访问，索引下标是从0开始的，到列表长度 - 1结束。\\
+列表用于存储多个数据，使用[]或list()函数创建。列表中的元素可以通过下标来访问，下标从0开始。列表除了正向索引访问之外，也可以进行反向索引访问。
 
-在使用列表进行数据存储的时候，虽然大部分的情况下都会使用相同的数据类型，但是在列表里面却可以同时有不同的数据类型，这比其它语言里面提供的数据的功能强大。虽然提供有多个数据类型的保存使得程序存储更加灵活，但是从实际的开发角度而言，尽量让数据类型保持一致会比较合理。\\
-
-在Python中列表除了正向索引访问之外，也可以进行反向索引访问。\\
-
-\mybox{列表}
+\vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
 lst = [1, 2, 3]
 
-print(lst[0])
-print(lst[1])
-print(lst[2])
+print(lst[0])		# 1
+print(lst[1])		# 2
+print(lst[2])		# 3
 
-print(lst[-1])
-print(lst[-2])
-print(lst[-3])
+print(lst[-1])		# 3
+print(lst[-2])		# 2
+print(lst[-3])		# 1
 
-print(lst[3])       # 越界
+print(lst[3])       # IndexError
 \end{lstlisting}
 
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-1
-2
-3
-3
-2
-1
-IndexError: list index out of range
-\end{verbatim}
-\end{tcolorbox}
++运算符可以用于列表的拼接，*运算符可以用于列表的重复。
 
-序列数据可以直接使用【*】进行重复定义，或者使用【+】进行与其它序列拼接。\\
-
-\mybox{序列重复/拼接}
+\vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
-lst = [1, 2, 3] * 3
-print(lst)      # [1, 2, 3, 1, 2, 3, 1, 2, 3]
-
 lst = [1, 2, 3] + [4, 5, 6]
 print(lst)      # [1, 2, 3, 4, 5, 6]
-\end{lstlisting}
 
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-[1, 2, 3, 1, 2, 3, 1, 2, 3]
-[1, 2, 3, 4, 5, 6]
-\end{verbatim}
-\end{tcolorbox}
+lst = [1, 2, 3] * 3
+print(lst)      # [1, 2, 3, 1, 2, 3, 1, 2, 3]
+\end{lstlisting}
 
 \vspace{0.5cm}
 
-\subsection{成员运算符}
+\subsection{in}
 
-在使用索引访问的时候都需要去考虑索引的设置错误的问题，但是使用了for循环之后，不再需要明确的进行索引的设置，避免了IndexError异常信息。\\
+in运算符用于判断某个元素是否在序列中，如果在则返回True，否则返回False。\\
 
-如果想要判断某一个数据是否在列表之中存在，最直接的方式就是直接进行列表的迭代操作（其它语言传统形式）。\\
-
-\mybox{迭代查找}
+\mybox{查询}
 
 \begin{lstlisting}[language=Python]
-lst = ["C/C++", "Java", "Python", "JavaScript"]
-key = "Python"      # 待查找关键词
-flag = False        # 初始假设未找到
+languages = ["C", "C++", "Python", "Java"]
+key = input("Enter a language: ")
 
-for item in lst:
-    if item == key:
-        flag = True
-        break
-
-if flag:
-    print("数据存在")
+if key in languages:
+	print("Found")
 else:
-    print("数据不存在")
+	print("Not found")
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-数据存在
-\end{verbatim}
-\end{tcolorbox}
-
-这种查询最大的问题在于需要进行整个列表数据的迭代，造成的结果就是时间复杂度的攀升$ O(n) $。在Python设计过程之中不希望开发者为这些复杂的执行效率犯愁，所以在使用列表判断某些数据是否存在的时候提供了专门的运算符。使用关键字in（在范围内）、not in（不在范围内）。\\
-
-\mybox{成员运算符}
-
-\begin{lstlisting}[language=Python]
-lst = ["C/C++", "Java", "Python", "JavaScript"]
-key = "Python"      # 待查找关键词
-
-if key in lst:
-    print("数据存在")
-else:
-    print("数据不存在")
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-数据存在
+Enter a language: Python
+Found
 \end{verbatim}
 \end{tcolorbox}
 
@@ -117,74 +64,59 @@ else:
 
 \subsection{切片（Slicing）}
 
-切片可以截取部分的列表内容。在默认情况下，数据的分片都是依照数值为1的间隔进行获取的，如果有需要也可以进行步长的修改。\\
+切片用于截取列表中的一部分元素，切片使用[start:end:step]进行操作，其中：
 
-\mybox{切片}
+\begin{itemize}
+	\item start：切片开始下标（包含），默认为0
+	\item end：切片结束下标（不包含），默认为列表长度
+	\item step：切片的步长，默认为1
+\end{itemize}
+
+\vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
 lst = list(range(10))
 
-print("原始列表：", end='')
-print(lst)
-
-print("截取[2:7]：", end='')
-print(lst[2:7])
-
-print("截取[:5]：", end='')
-print(lst[:5])
-
-print("截取[3:]：", end='')
-print(lst[3:])
-
-print("截取[::2]：", end='')
-print(lst[::2])
+print("lst =", lst)             # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print("lst[2:7] =", lst[2:7])   # [2, 3, 4, 5, 6]
+print("lst[:5] =", lst[:5])     # [0, 1, 2, 3, 4]
+print("lst[3:] =", lst[3:])     # [3, 4, 5, 6, 7, 8, 9]
+print("lst[:] =", lst[:])       # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print("lst[::2] =", lst[::2])   # [0, 2, 4, 6, 8]
 \end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-原始列表：[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-截取[2:7]：[2, 3, 4, 5, 6]
-截取[:5]：[0, 1, 2, 3, 4]
-截取[3:]：[3, 4, 5, 6, 7, 8, 9]
-截取[::2]：[0, 2, 4, 6, 8]
-\end{verbatim}
-\end{tcolorbox}
 
 \vspace{0.5cm}
 
-\subsection{列表操作函数}
+\subsection{列表方法}
 
-Python中的列表设计非常到位，它可以实现内容动态扩充，可以进行后期的追加或者删除。
+列表提供了很多内置方法，可以用于处理列表中的数据。\\
 
 \begin{table}[H]
 	\centering
 	\setlength{\tabcolsep}{5mm}{
 		\begin{tabular}{|l|l|}
 			\hline
-			\textbf{函数}       & \textbf{功能}                    \\
+			\textbf{方法} & \textbf{功能}                  \\
 			\hline
-			append(data)        & 在列表最后追加新内容             \\
+			append()      & 追加数据                       \\
 			\hline
-			clear()             & 清除列表数据                     \\
+			extend()      & 追加列表                       \\
 			\hline
-			copy()              & 列表拷贝                         \\
+			insert()      & 指定位置插入                   \\
 			\hline
-			count()             & 统计某一个数据在列表中的出现次数 \\
+			remove()      & 删除第一个出现的指定数据       \\
 			\hline
-			extend(列表)        & 为一个列表追加另外一个列表       \\
+			pop()         & 删除指定位置的数据             \\
 			\hline
-			index(data)         & 从列表查询某个值第一次出现的位置 \\
+			index()       & 查询指定数据第一次出现的位置   \\
 			\hline
-			insert(index, data) & 向列表中指定索引位置追加新数据   \\
+			count()       & 统计指定数据在列表中出现的次数 \\
 			\hline
-			pop(index)          & 从列表弹出并删除一个数据         \\
+			sort()        & 对列表进行排序                 \\
 			\hline
-			remove(data)        & 从列表删除数据                   \\
+			reverse()     & 对列表进行反转                 \\
 			\hline
-			reverse()           & 列表数据反转                     \\
-			\hline
-			sort()              & 列表数据排序                     \\
+			clear()       & 清空列表                       \\
 			\hline
 		\end{tabular}
 	}
@@ -193,87 +125,59 @@ Python中的列表设计非常到位，它可以实现内容动态扩充，可�
 
 \vspace{0.5cm}
 
-\mybox{列表内容扩充}
+\mybox{列表方法}
 
 \begin{lstlisting}[language=Python]
-lst = list(range(5))    # [0, 1, 2, 3, 4]
-lst.append(5)           # [0, 1, 2, 3, 4, 5]
-lst.insert(2, 6)        # [0, 1, 6, 2, 3, 4, 5]
-print(lst)
-print("列表长度：%d" % len(lst))
-\end{lstlisting}
+lst = list(range(5))
+print("lst =", lst)
 
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-[0, 1, 6, 2, 3, 4, 5]
-列表长度：7
-\end{verbatim}
-\end{tcolorbox}
+lst.append(5)
+print("append(5):", lst)
 
-在使用remove()删除的时候，内容存在可以删除，不存在就会抛出ValueError异常信息，因此使用remove()操作之前一定要通过in判断。\\
+lst.insert(0, 8)
+print("insert(0, 8):", lst)
 
-如果不知道内容要进行数据的删除，最简单的原始的Python支持可以采用del关键字实现内容删除，而且使用del的时候只需要知道列表数据的索引即可实现。使用del关键字的确可以实现索引的删除，但是无法知道被删除了哪些数据。\\
+lst.extend([8, 2, 3])
+print("extend([8, 2, 3]):", lst)
 
-pop()可以根据索引删除，而后告诉用户哪些数据被删除了。\\
+lst.remove(5)
+print("remove(5):", lst)
 
-\mybox{删除元素}
+lst.pop(0)
+print("pop(0):", lst)
 
-\begin{lstlisting}[language=Python]
-lst = list(range(5))    # [0, 1, 2, 3, 4]
-key = 3
+print("index(3):", lst.index(3))
 
-if key in lst:
-    lst.remove(key)
-print(lst)              # [0, 1, 2, 4]
+print("count(8):", lst.count(8))
 
-del lst[2]
-print(lst)              # [0, 1, 4]
-
-print(lst.pop(1))       # 1
-print(lst)              # [0, 4]
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-[0, 1, 2, 4]
-[0, 1, 4]
-1
-[0, 4]
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
-\mybox{列表反转/排序}
-
-\begin{lstlisting}[language=Python]
-lst = [7, 4, 0, 3, 6, 8, 9, 2]
-
-print("原始列表：", end='')
-print(lst)
-
-print("反转：", end='')
-lst.reverse()
-print(lst)
-
-print("排序（升序）：", end='')
 lst.sort()
-print(lst)
+print("sort():", lst)
 
-print("排序（降序）：", end='')
 lst.sort(reverse=True)
-print(lst)
+print("sort(reverse=True):", lst)
+
+lst.reverse()
+print("reverse():", lst)
+
+lst.clear()
+print("clear():", lst)
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-原始列表：[7, 4, 0, 3, 6, 8, 9, 2]
-反转：[2, 9, 8, 6, 3, 0, 4, 7]
-排序（升序）：[0, 2, 3, 4, 6, 7, 8, 9]
-排序（降序）：[9, 8, 7, 6, 4, 3, 2, 0]
+lst = [0, 1, 2, 3, 4]
+append(5): [0, 1, 2, 3, 4, 5]
+insert(0, 8): [8, 0, 1, 2, 3, 4, 5]
+extend([8, 2, 3]): [8, 0, 1, 2, 3, 4, 5, 8, 2, 3]
+remove(5): [8, 0, 1, 2, 3, 4, 8, 2, 3]
+pop(0): [0, 1, 2, 3, 4, 8, 2, 3]
+index(3): 3
+count(8): 1
+sort(): [0, 1, 2, 2, 3, 3, 4, 8]
+sort(reverse=True): [8, 4, 3, 3, 2, 2, 1, 0]
+reverse(): [8, 4, 3, 3, 2, 2, 1, 0]
+clear(): []
 \end{verbatim}
 \end{tcolorbox}
 
@@ -419,34 +323,6 @@ www.baidu.com
 
 \vspace{0.5cm}
 
-\subsection{字符串格式化}
-
-在Python默认的语言环境中有字符串格式化的处理支持。为了进一步完善对于字符串格式化的需求，又提供了format()。在format()里面出现的【\{\}】标记里面可以定义标记名称或者数据的填充序列顺序定义。\\
-
-\mybox{字符串格式化}
-
-\begin{lstlisting}[language=Python]
-name = "小灰"
-age = 16
-height = 175.6
-
-info = "姓名：%s，年龄：%d，身高：%.2f" % (name, age, height)
-print(info)
-
-info = "姓名：{}，年龄：{}，身高：{}".format(name, age, height)
-print(info)
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-姓名：小灰，年龄：16，身高：175.60
-姓名：小灰，年龄：16，身高：175.6
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
 \subsection{字符串数据处理函数}
 
 \begin{table}[H]
@@ -585,38 +461,7 @@ print("部分替换：" + str.replace("Hello", "Hey", 1))
 
 \subsubsection{字符串去除前后空格strip()}
 
-在用户键盘数据输入的过程中，有可能用户在输入信息时会添加无用的空格，导致数据判断错误。对于用户输入数据需要进行左右空格的删除。\\
-
-\mybox{模拟登陆}
-
-\begin{lstlisting}[language=Python]
-while True:
-    info = input("Username:Password >>> ")
-    if len(info) == 0 or info.find(":") == -1:
-        print("输入格式错误！")
-    else:
-        data = info.split(":")
-        username = data[0]
-        password = data[1]
-        if username == "admin" and password == "123456":
-            print("欢迎【%s】成功登录！" % username)
-            break
-        else:
-            print("用户名或密码错误！")
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-Username:Password >>> hey:
-用户名或密码错误！
-Username:Password >>> admin
-输入格式错误！
-Username:Password >>> admin:123456
-欢迎【admin】成功登录！
-\end{verbatim}
-\end{tcolorbox}
-
+在用户键盘数据输入的过程中，有可能用户在输入信息时会添加无用的空格，导致数据判断错误。对于用户输入数据需要进行左右空格的删除。
 \newpage
 
 \section{字典}
