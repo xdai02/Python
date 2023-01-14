@@ -77,12 +77,12 @@ Found
 \begin{lstlisting}[language=Python]
 lst = list(range(10))
 
-print("lst =", lst)             # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-print("lst[2:7] =", lst[2:7])   # [2, 3, 4, 5, 6]
-print("lst[:5] =", lst[:5])     # [0, 1, 2, 3, 4]
-print("lst[3:] =", lst[3:])     # [3, 4, 5, 6, 7, 8, 9]
-print("lst[:] =", lst[:])       # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-print("lst[::2] =", lst[::2])   # [0, 2, 4, 6, 8]
+print(lst)			# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(lst[2:7])		# [2, 3, 4, 5, 6]
+print(lst[:5])		# [0, 1, 2, 3, 4]
+print(lst[3:])		# [3, 4, 5, 6, 7, 8, 9]
+print(lst[:])		# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(lst[::2])		# [0, 2, 4, 6, 8]
 \end{lstlisting}
 
 \vspace{0.5cm}
@@ -187,45 +187,23 @@ clear(): []
 
 \subsection{元组（Tuple）}
 
-列表是可以进行多个数据的保存，并且里面的内容都是可以修改和动态扩充的。与列表不一样，Python提供了一个不可变的数据的序列——元组，元组需要使用【()】进行定义。元组定义的时候如果只有一个内容，必须要有【,】。\\
+元组与列表类似，但是元组中的元素是不可修改的。元素使用()或tuple()定义，当元组只有一个元素时，必须在元素后面加上逗号。\\
 
-\mybox{元组}
+\mybox{两点间距离}
 
 \begin{lstlisting}[language=Python]
-tup = (0, 1, 2, 3, 4)
-print(tup)
-tup[0] = 5
+import math
+
+p1 = (0, 0)
+p2 = (3, 4)
+distance = math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
+print(distance)
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-(0, 1, 2, 3, 4)
-TypeError: 'tuple' object does not support item assignment
-\end{verbatim}
-\end{tcolorbox}
-
-tuple()可以实现列表与元组的转换。\\
-
-\mybox{元组与列表的转换}
-
-\begin{lstlisting}[language=Python]
-lst = list(range(5))
-print(lst)
-print(type(lst))
-
-tup = tuple(lst)
-print(tup)
-print(type(tup))
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-[0, 1, 2, 3, 4]
-<class 'list'>
-(0, 1, 2, 3, 4)
-<class 'tuple'>
+5.0
 \end{verbatim}
 \end{tcolorbox}
 
@@ -257,211 +235,171 @@ print(type(tup))
 	\caption{序列统计函数}
 \end{table}
 
-\vspace{0.5cm}
-
-\mybox{序列统计函数}
-
 \begin{lstlisting}[language=Python]
 lst = [4, 0, 1, 3, 2]
-tup = (8, 5, 7, 9, 6)
-str = "HelloWorld"
+tup = (8, 5, 7, 9)
 
-print("列表lst的长度 = %d" % len(lst))
-print("元组tup的长度 = %d" % len(tup))
-print("字符串str的长度 = %d" % len(str))
+print(len(lst))		# 5
+print(len(tup))		# 4
 
-print("列表lst最大值：%d" % max(lst))
-print("元组tup最小值 = %d" % min(tup))
-print("字符串str最大值 = %c" % max(str))
-print("字符串str最小值 = %c" % min(str))
+print(max(lst))		# 4
+print(max(tup))		# 9
 
-print("列表lst总和：%d" % sum(lst))
-print("元组tup总和：%d" % sum(tup))
+print(min(lst))		# 0
+print(min(tup))		# 5
+
+print(sum(lst))		# 10
+print(sum(tup))		# 29
 \end{lstlisting}
 
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-列表lst的长度 = 5
-元组tup的长度 = 5
-字符串str的长度 = 10
-列表lst最大值：4
-元组tup最小值 = 5
-字符串str最大值 = r
-字符串str最小值 = H
-列表lst总和：10
-元组tup总和：35
-\end{verbatim}
-\end{tcolorbox}
+\newpage
+
+\section{集合}
+
+\subsection{集合（Set）}
+
+集合表示一组无序且不重复的元素，使用{}或set()定义。\\
+
+集合是无序的，因此不能通过下标来访问集合中的元素，但是可以通过in来判断元素是否在集合中。\\
+
+集合支持数学上的集合运算，包括交集、并集、差集等：
+
+\begin{itemize}
+	\item 交集：intersection()或\&
+	\item 并集：union()或|
+	\item 差集：difference()或-
+\end{itemize}
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=Python]
+s1 = {1, 2, 3}
+s2 = {3, 4, 5}
+
+print(s1 & s2)				# {3}
+print(s1.intersection(s2))	# {3}
+
+print(s1 | s2)				# {1, 2, 3, 4, 5}
+print(s1.union(s2))			# {1, 2, 3, 4, 5}
+
+print(s1 - s2)				# {1, 2}
+print(s1.difference(s2))	# {1, 2}
+\end{lstlisting}
 
 \newpage
 
 \section{字符串}
 
-\subsection{字符串（String）}
-
-字符串是由若干个字符所组成的，使用引号进行一串内容的声明。字符串也可以进行数据的分片操作和序列统计函数。\\
-
-\mybox{字符串}
-
-\begin{lstlisting}[language=Python]
-info = "url: www.baidu.com"
-
-print("字符串长度：%d" % len(info))
-
-if "url: " in info:
-    print(info[5:])
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-字符串长度：18
-www.baidu.com
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
-\subsection{字符串数据处理函数}
+\subsection{字符串修改}
 
 \begin{table}[H]
 	\centering
 	\setlength{\tabcolsep}{5mm}{
 		\begin{tabular}{|l|l|}
 			\hline
-			\textbf{函数}               & \textbf{功能}                        \\
+			\textbf{方法} & \textbf{功能}    \\
 			\hline
-			center()                    & 字符串居中显示                       \\
+			lower()       & 转换小写         \\
 			\hline
-			find(data)                  & 查找到内容返回索引位置，找不到返回-1 \\
+			upper()       & 转换大写         \\
 			\hline
-			join(data)                  & 字符串连接                           \\
+			capitalize()  & 首字母大写       \\
 			\hline
-			split(data [, limit])       & 字符串拆分                           \\
+			strip()       & 去除首尾空白字符 \\
 			\hline
-			lower()                     & 字符串转小写                         \\
-			\hline
-			upper()                     & 字符串转大写                         \\
-			\hline
-			capitalize()                & 首字母大写                           \\
-			\hline
-			replace(old, new [, limit]) & 字符串替换                           \\
-			\hline
-			strip()                     & 删除左右空格                         \\
+			replace()     & 字符串替换       \\
 			\hline
 		\end{tabular}
 	}
-	\caption{字符串数据处理函数}
 \end{table}
 
-\subsubsection{字符串大小写转换}
-
-\vspace{0.5cm}
-
-\mybox{字符串大小写转换}
+\mybox{字符串修改}
 
 \begin{lstlisting}[language=Python]
-str = "Hello World!"
-print(str.upper())
-print(str.lower())
+s = "Hello World!"
+
+print("[Lower]")
+print(s.lower())
+
+print("[Upper]")
+print(s.upper())
+
+print("[Capitalize]")
+print(s.capitalize())
+
+print("[Strip]")
+print("   Hello World!\n \t".strip())
+
+print("[Replace]")
+print(s.replace("Hello", "Bye"))
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-HELLO WORLD!
+[Lower]
 hello world!
+[Upper]     
+HELLO WORLD!
+[Capitalize]
+Hello world!
+[Strip]     
+Hello World!
+[Replace]
+Bye World!
 \end{verbatim}
 \end{tcolorbox}
-
-\subsubsection{字符串查找find()}
-
-在进行数据内容查询的时候，如果内容存在就返回索引位置，不存在则返回-1。\\
-
-\mybox{字符串查找}
-
-\begin{lstlisting}[language=Python]
-str = "Hello World!"
-print(str.find("Wor"))
-print(str.find("Python"))
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-6
--1
-\end{verbatim}
-\end{tcolorbox}
-
-\subsubsection{字符串连接join()}
-
-使用一个特定的字符串连接序列中的若干内容。\\
-
-\mybox{字符串连接}
-
-\begin{lstlisting}[language=Python]
-lst = ["www", "baidu", "com"]
-url = ".".join(lst)
-print(url)
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-www.baidu.com
-\end{verbatim}
-\end{tcolorbox}
-
-\subsubsection{字符串拆分split()}
 
 \vspace{0.5cm}
 
-\mybox{字符串拆分}
+\subsection{字符串分割}
+
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{|l|l|}
+			\hline
+			\textbf{方法} & \textbf{功能} \\
+			\hline
+			join()        & 字符串拼接    \\
+			\hline
+			split()       & 字符串分割    \\
+			\hline
+		\end{tabular}
+	}
+\end{table}
+
+\mybox{日期}
 
 \begin{lstlisting}[language=Python]
-ip = "127.0.0.1"
-print("ip信息：%s" % ip.split("."))
+date_time = "2023/1/14 23:26:51"
 
-date_time = "2021/03/31 17:32:53"
-item = date_time.split(" ")
-print("date信息：%s" % item[0].split("/"))
-print("time信息：%s" % item[1].split(":"))
+date, time = date_time.split(" ")
+
+year, month, day = date.split("/")
+hour, minute, second = time.split(":")
+
+date = [day, month, year]
+date = "/".join(date)
+
+if int(hour) < 12:
+	time = [hour, minute, second]
+	time = ":".join(time) + " AM"
+else:
+	time = [str(int(hour) - 12), minute, second]
+	time = ":".join(time) + " PM"
+
+date_time = date + " " + time
+print(date_time)
 \end{lstlisting}
 
 \begin{tcolorbox}
 	\mybox{运行结果}
 	\begin{verbatim}
-ip信息：['127', '0', '0', '1']
-date信息：['2021', '03', '31']
-time信息：['17', '32', '53']
+14/1/2023 11:26:51 PM
 \end{verbatim}
 \end{tcolorbox}
 
-\subsubsection{字符串替换replace()}
-
-使用一个字符串去替换其它的字符串，在进行字符串替换的时候可以设置替换的次数。replace()的替换是进行全匹配的替换操作。\\
-
-\mybox{字符串替换}
-
-\begin{lstlisting}[language=Python]
-str = "Hello World, Hello Python!"
-print("全部替换：" + str.replace("Hello", "Hey"))
-print("部分替换：" + str.replace("Hello", "Hey", 1))
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-全部替换：Hey World, Hey Python!
-部分替换：Hey World, Hello Python!
-\end{verbatim}
-\end{tcolorbox}
-
-\subsubsection{字符串去除前后空格strip()}
-
-在用户键盘数据输入的过程中，有可能用户在输入信息时会添加无用的空格，导致数据判断错误。对于用户输入数据需要进行左右空格的删除。
 \newpage
 
 \section{字典}
