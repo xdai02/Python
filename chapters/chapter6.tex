@@ -1,243 +1,70 @@
 \chapter{模块}
 
-\section{模块导入}
+\section{random}
 
-\subsection{模块（Module）}
+\subsection{random}
 
-模块是进行大型项目拆分组织的一种有效技术手段，它可以将一个庞大的代码分割成若干个小的组成单元，方便进行代码的开发与维护。利用模块的划分，在进行代码维护的时候，可以保证局部的更新不影响其它的程序的运行操作。\\
-
-使用import关键字可以进行模块的导入，import可以同时导入多个模块，但是从开发的角度来讲，强烈建议分开导入。
-
-\vspace{-0.5cm}
-
-\begin{lstlisting}[language=Python]
-import package.module [as alias] [, ...]
-\end{lstlisting}
-
-\vspace{0.5cm}
-
-\mybox{模块导入}
-
-\begin{lstlisting}[language=Python, title=algorithm/search.py]
-def sequence_search(list, key):
-    """
-        顺序查找
-        Args:
-            list (list): 待查找数组
-            key (int): 关键字
-    """
-    for i in range(len(list)):
-        if list[i] == key:
-            return i
-    return -1
-
-def binary_search(list, key):
-    """
-        二分查找
-        Args:
-            list (list): 待查找数组
-            key (int): 关键字
-    """
-    start = 0
-    end = len(list) - 1
-    while start <= end:
-        mid = (start + end) // 2
-        if list[mid] == key:
-            return mid
-        elif list[mid] < key:
-            start = mid + 1
-        else:
-            end = mid - 1
-    return -1
-\end{lstlisting}
-
-\begin{lstlisting}[language=Python, title=import\_as.py]
-import algorithm.search as search
-
-def main():
-    list = [40, 9, 20, 93, 7, 34, 85, 91]
-    key = 34
-    print("%d所在位置：%d" % (key, search.sequence_search(list, key)))
-
-if __name__ == "__main__":
-    main()
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-34所在位置：5
-\end{verbatim}
-\end{tcolorbox}
-
-在Python里有一个作者写的Python开发禅道（开发的19条哲学），如果想看到这个彩蛋的信息，可以在Python的交互模式输入import this。\\
-
-\vspace{-0.5cm}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-The Zen of Python, by Tim Peters
-
-Beautiful is better than ugly.
-Explicit is better than implicit.
-Simple is better than complex.
-Complex is better than complicated.
-Flat is better than nested.
-Sparse is better than dense.
-Readability counts.
-Special cases aren't special enough to break the rules.
-Although practicality beats purity.
-Errors should never pass silently.
-Unless explicitly silenced.
-In the face of ambiguity, refuse the temptation to guess.
-There should be one-- and preferably only one --obvious way to
-do it.
-Although that way may not be obvious at first unless you're
-Dutch.
-Now is better than never.
-Although never is often better than *right* now.
-If the implementation is hard to explain, it's a bad idea.
-If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea -- let's do more of those!
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
-\subsection{from-import模块导入}
-
-使用import导入模块之后需要采用module\_name.func()形式进行调用，每一次调用函数非常麻烦。from-import导入语法可以简化调用语句。\\
-
-\vspace{-0.5cm}
-
-\begin{lstlisting}[language=Python]
-from package.module import name [as alias] [, ...]
-\end{lstlisting}
-
-在实践中, from-import不是良好的编程风格，因为如果导入的变量与作用域中现有变量同名，那么变量就会被悄悄覆盖掉。使用import语句的时候就不会发生这种问题，通过module.var或module.func()获取的变量或方法不会与现有作用域冲突。\\
-
-\mybox{from-import导入}
-
-\begin{lstlisting}[language=Python, title=algorithm/search.py]
-def sequence_search(list, key):
-    """
-        顺序查找
-        Args:
-            list (list): 待查找数组
-            key (int): 关键字
-    """
-    for i in range(len(list)):
-        if list[i] == key:
-            return i
-    return -1
-
-def binary_search(list, key):
-    """
-        二分查找
-        Args:
-            list (list): 待查找数组
-            key (int): 关键字
-    """
-    start = 0
-    end = len(list) - 1
-    while start <= end:
-        mid = (start + end) // 2
-        if list[mid] == key:
-            return mid
-        elif list[mid] < key:
-            start = mid + 1
-        else:
-            end = mid - 1
-    return -1
-\end{lstlisting}
-
-\begin{lstlisting}[language=Python, title=from\_import.py]
-from algorithm.search import binary_search
-
-def main():
-    list = [7, 9, 20, 34, 40, 85, 91, 93]
-    key = 34
-    print("%d所在位置：%d" % (key, binary_search(list, key)))
-
-if __name__ == "__main__":
-    main()
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-34所在位置：3
-\end{verbatim}
-\end{tcolorbox}
-
-\newpage
-
-\section{random模块}
-
-\subsection{random模块}
-
-随机数可以在一个指定的范围之内随机地生成一些数字供使用。例如，手机验证码发送来的数字就是使用随机数的方式生成的。
+random模块提供了生成随机数据的功能。
 
 \begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{5mm}{
-		\begin{tabular}{|l|l|}
-			\hline
-			\textbf{方法}         & \textbf{功能}                                   \\
-			\hline
-			random()              & 生成一个0到1的随机浮点数：$ 0.0 \le n \le 1.0 $ \\
-			\hline
-			uniform(x, y)         & 生成一个在指定范围内的随机浮点数                \\
-			\hline
-			randint(x, y)         & 生成一个指定范围内的随机整数$ x \le n \le y $   \\
-			\hline
-			choice(sequence)      & 从序列中随机抽取数据                            \\
-			\hline
-			shuffle(x [, random]) & 将一个列表中的元素打乱                          \\
-			\hline
-			sample(sequence, k)   & 从指定序列中随机获取指定序列分片                \\
-			\hline
-		\end{tabular}
-	}
-	\caption{random模块}
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|l|l|}
+            \hline
+            \textbf{方法} & \textbf{功能}                      \\
+            \hline
+            random()      & 生成一个$ [0, 1] $之间的随机浮点数 \\
+            \hline
+            randint(x, y) & 生成一个$ [x, y] $之间的随机整数   \\
+            \hline
+            choice()      & 从序列中随机返回一个元素           \\
+            \hline
+            shuffle()     & 将序列打乱                         \\
+            \hline
+            sample()      & 从序列中生成一组唯一的随机元素     \\
+            \hline
+        \end{tabular}
+    }
+    \caption{random模块}
 \end{table}
 
-\mybox{random模块}
+\mybox{随机密码生成}
 
 \begin{lstlisting}[language=Python]
 import random
+import string
+
+def password_generator(length):
+    characters = string.ascii_letters + string.digits
+    return "".join(random.choice(characters) for _ in range(length))
 
 def main():
-    lst = [random.randint(1, 100) for _ in range(10)]
-    print("初始序列：%s" % lst)
-    print("随机抽取：", end='')
-    for _ in range(5):
-        print(random.choice(lst), end=' ')
+    length = int(input("Enter length of password: "))
+    print(password_generator(length))
 
 if __name__ == "__main__":
     main()
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-初始序列：[85, 83, 83, 29, 2, 93, 30, 65, 41, 54]
-随机抽取：41 93 2 54 93
+    \mybox{运行结果}
+    \begin{verbatim}
+Enter length of password: 8
+@o8VBuiV
 \end{verbatim}
 \end{tcolorbox}
 
 \newpage
 
-\section{copy模块}
+\section{copy}
 
-\subsection{copy模块}
+\subsection{copy}
 
 copy是一个专门进行内容复制的处理模块。拷贝分为浅拷贝（shallow copy）和深拷贝（deep copy）两种：
 
 \begin{itemize}
-	\item 浅拷贝：只是复制第一层的内容，而更深入的数据嵌套关系不会拷贝。
-	\item 深拷贝：会进行完整的复制。
+    \item 浅拷贝：只是复制第一层的内容，而更深入的数据嵌套关系不会拷贝。
+    \item 深拷贝：会进行完整的复制。
 \end{itemize}
 
 \vspace{0.5cm}
@@ -254,18 +81,18 @@ b = a
 \end{lstlisting}
 
 \begin{figure}[H]
-	\centering
-	\begin{tikzpicture}
-		\draw (0,0) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,1);
-		\draw (-2,1.5) circle(0.5) node{a};
-		\draw (-2,-0.5) circle(0.5) node{b};
-		\draw (3,-2) rectangle node{\textcolor{blue}{[1, 2, 3]}} (5,-1);
+    \centering
+    \begin{tikzpicture}
+        \draw (0,0) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,1);
+        \draw (-2,1.5) circle(0.5) node{a};
+        \draw (-2,-0.5) circle(0.5) node{b};
+        \draw (3,-2) rectangle node{\textcolor{blue}{[1, 2, 3]}} (5,-1);
 
-		\draw[->] (-1.5,1.5) -- (0,1);
-		\draw[->] (-1.5,-0.5) -- (0,0);
-		\draw[->, blue] (1.4,0.2) -- (1.4,-1.5) -- (3,-1.5);
-	\end{tikzpicture}
-	\caption{引用}
+        \draw[->] (-1.5,1.5) -- (0,1);
+        \draw[->] (-1.5,-0.5) -- (0,0);
+        \draw[->, blue] (1.4,0.2) -- (1.4,-1.5) -- (3,-1.5);
+    \end{tikzpicture}
+    \caption{引用}
 \end{figure}
 
 \vspace{0.5cm}
@@ -284,8 +111,8 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
+    \mybox{运行结果}
+    \begin{verbatim}
 {'name':'小灰', 'age':16, 'skills':['Python', 'C/C++', 'Java']}
 \end{verbatim}
 \end{tcolorbox}
@@ -304,20 +131,20 @@ b = a.copy()
 \end{lstlisting}
 
 \begin{figure}[H]
-	\centering
-	\begin{tikzpicture}
-		\draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
-		\draw (-2,1.5) circle(0.5) node{a};
-		\draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
-		\draw (-2,-0.5) circle(0.5) node{b};
-		\draw (4,0) rectangle node{[1, 2, 3]} (6,1);
+    \centering
+    \begin{tikzpicture}
+        \draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
+        \draw (-2,1.5) circle(0.5) node{a};
+        \draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
+        \draw (-2,-0.5) circle(0.5) node{b};
+        \draw (4,0) rectangle node{[1, 2, 3]} (6,1);
 
-		\draw[->] (-1.5,1.5) -- (0,1.5);
-		\draw[->] (-1.5,-0.5) -- (0,-0.5);
-		\draw[->, blue] (1.4,1.2) -- (1.4,0.75) -- (4,0.75);
-		\draw[->, red] (1.4,-0.2) -- (1.4,0.3) -- (4,0.3);
-	\end{tikzpicture}
-	\caption{浅拷贝}
+        \draw[->] (-1.5,1.5) -- (0,1.5);
+        \draw[->] (-1.5,-0.5) -- (0,-0.5);
+        \draw[->, blue] (1.4,1.2) -- (1.4,0.75) -- (4,0.75);
+        \draw[->, red] (1.4,-0.2) -- (1.4,0.3) -- (4,0.3);
+    \end{tikzpicture}
+    \caption{浅拷贝}
 \end{figure}
 
 \vspace{0.5cm}
@@ -340,8 +167,8 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
+    \mybox{运行结果}
+    \begin{verbatim}
 {'name':'小灰', 'age':16, 'skills':['Python', 'C/C++', 'Java']}
 {'name':'小灰', 'skills':['Python', 'C/C++', 'Java']}
 \end{verbatim}
@@ -359,21 +186,21 @@ b = copy.deepcopy(a)
 \end{lstlisting}
 
 \begin{figure}[H]
-	\centering
-	\begin{tikzpicture}
-		\draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
-		\draw (-2,1.5) circle(0.5) node{a};
-		\draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
-		\draw (-2,-0.5) circle(0.5) node{b};
-		\draw (4,0) rectangle node{\textcolor{blue}{[1, 2, 3]}} (6,1);
-		\draw (4,-2) rectangle node{\textcolor{red}{[1, 2, 3]}} (6,-1);
+    \centering
+    \begin{tikzpicture}
+        \draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
+        \draw (-2,1.5) circle(0.5) node{a};
+        \draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
+        \draw (-2,-0.5) circle(0.5) node{b};
+        \draw (4,0) rectangle node{\textcolor{blue}{[1, 2, 3]}} (6,1);
+        \draw (4,-2) rectangle node{\textcolor{red}{[1, 2, 3]}} (6,-1);
 
-		\draw[->] (-1.5,1.5) -- (0,1.5);
-		\draw[->] (-1.5,-0.5) -- (0,-0.5);
-		\draw[->, blue] (1.4,1.2) -- (1.4,0.5) -- (4,0.5);
-		\draw[->, red] (1.4,-0.8) -- (1.4,-1.5) -- (4,-1.5);
-	\end{tikzpicture}
-	\caption{深拷贝}
+        \draw[->] (-1.5,1.5) -- (0,1.5);
+        \draw[->] (-1.5,-0.5) -- (0,-0.5);
+        \draw[->, blue] (1.4,1.2) -- (1.4,0.5) -- (4,0.5);
+        \draw[->, red] (1.4,-0.8) -- (1.4,-1.5) -- (4,-1.5);
+    \end{tikzpicture}
+    \caption{深拷贝}
 \end{figure}
 
 \vspace{0.5cm}
@@ -396,8 +223,8 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
+    \mybox{运行结果}
+    \begin{verbatim}
 {'name': '小灰', 'age': 16, 'skills': ['Python', 'C/C++']}
 {'name': '小灰', 'skills': ['Python', 'C/C++', 'Java']}
 \end{verbatim}
@@ -414,21 +241,21 @@ Python在数据分析领域上使用非常广泛，并且实现简单。在Pytho
 在Python中默认提供有了filter()、map()，但是要进行统计处理，则需要导入reduce()。
 
 \begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{5mm}{
-		\begin{tabular}{|l|l|}
-			\hline
-			\textbf{函数}              & \textbf{功能}            \\
-			\hline
-			filter(function, sequence) & 对传入的序列数据进行过滤 \\
-			\hline
-			map(function, sequence)    & 对传入的序列数据进行处理 \\
-			\hline
-			reduce(function, sequence) & 对传入的序列数据进行统计 \\
-			\hline
-		\end{tabular}
-	}
-	\caption{MapReduce数据处理函数}
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|l|l|}
+            \hline
+            \textbf{函数}              & \textbf{功能}            \\
+            \hline
+            filter(function, sequence) & 对传入的序列数据进行过滤 \\
+            \hline
+            map(function, sequence)    & 对传入的序列数据进行处理 \\
+            \hline
+            reduce(function, sequence) & 对传入的序列数据进行统计 \\
+            \hline
+        \end{tabular}
+    }
+    \caption{MapReduce数据处理函数}
 \end{table}
 
 在进行数据处理的过程之中都需要有一个处理函数，这个处理函数就定义了数据该如何进行处理或统计，一般而言这样的函数都比较短，所以大部分情况下都可以利用lambda函数来完成。\\
@@ -455,8 +282,8 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
+    \mybox{运行结果}
+    \begin{verbatim}
 过滤出偶数：[0, 2, 4, 6, 8]
 平方：[0, 4, 16, 36, 64]
 求和：120
@@ -465,7 +292,7 @@ if __name__ == "__main__":
 
 \newpage
 
-\section{pip模块管理工具}
+\section{jieba}
 
 \subsection{pip}
 
@@ -474,32 +301,30 @@ Python本地有一些系统模块开发者可以直接进行使用，但是开�
 在Python安装的时候会自动进行pip工具的相关安装，输入pip --help查看pip的相关命令选项。
 
 \begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{5mm}{
-		\begin{tabular}{|l|l|}
-			\hline
-			\textbf{功能}  & \textbf{命令}                \\
-			\hline
-			搜索模块       & pip search 模块名            \\
-			\hline
-			安装模块       & pip install 模块名           \\
-			\hline
-			查看已安装模块 & pip list                     \\
-			\hline
-			列出过期模块   & pip list --outdated          \\
-			\hline
-			更新模块       & pip install --upgrade 模块名 \\
-			\hline
-			卸载模块       & pip uninstall 模块名         \\
-			\hline
-		\end{tabular}
-	}
-	\caption{pip命令}
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|l|l|}
+            \hline
+            \textbf{功能}  & \textbf{命令}                \\
+            \hline
+            搜索模块       & pip search 模块名            \\
+            \hline
+            安装模块       & pip install 模块名           \\
+            \hline
+            查看已安装模块 & pip list                     \\
+            \hline
+            列出过期模块   & pip list --outdated          \\
+            \hline
+            更新模块       & pip install --upgrade 模块名 \\
+            \hline
+            卸载模块       & pip uninstall 模块名         \\
+            \hline
+        \end{tabular}
+    }
+    \caption{pip命令}
 \end{table}
 
-\newpage
-
-\section{jieba分词}
+\vspace{0.5cm}
 
 \subsection{jieba}
 
@@ -510,11 +335,11 @@ jieba是在中文自然语言处理中用得最多的工具包之一，它以分
 考虑到分词的效果与性能，在jieba组件中提供有3种分词模式：
 
 \begin{enumerate}
-	\item 精确模式：将句子进行最精确的切分，分词速度相对较低。
+    \item 精确模式：将句子进行最精确的切分，分词速度相对较低。
 
-	\item 全模式：基于词汇列表将句子中所有可以成词的词语都扫描出来，该模式处理速度非常快，但是不能有效解决歧义的问题。
+    \item 全模式：基于词汇列表将句子中所有可以成词的词语都扫描出来，该模式处理速度非常快，但是不能有效解决歧义的问题。
 
-	\item 搜索引擎模式：在精确模式的基础上，对长词进行再次切分，该模式适用于搜索引擎构建索引的分词。
+    \item 搜索引擎模式：在精确模式的基础上，对长词进行再次切分，该模式适用于搜索引擎构建索引的分词。
 \end{enumerate}
 
 \vspace{0.5cm}
