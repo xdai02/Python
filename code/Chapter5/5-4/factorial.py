@@ -4,7 +4,7 @@ def factorial(n):
     return n * factorial(n-1)
 
 def main():
-    print("5! = %d" % factorial(5))
+    print("5! =", factorial(5))
 
 if __name__ == "__main__":
     main()
