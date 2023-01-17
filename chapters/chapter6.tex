@@ -58,32 +58,21 @@ Enter length of password: 8
 
 \section{copy}
 
-\subsection{copy}
+\subsection{引用（Reference）}
 
-copy是一个专门进行内容复制的处理模块。拷贝分为浅拷贝（shallow copy）和深拷贝（deep copy）两种：
-
-\begin{itemize}
-    \item 浅拷贝：只是复制第一层的内容，而更深入的数据嵌套关系不会拷贝。
-    \item 深拷贝：会进行完整的复制。
-\end{itemize}
-
-\vspace{0.5cm}
-
-\subsection{引用}
-
-引用的本质在于将同一块内存空间，交给不同的对象进行同时操作，当一个对象修改了内存数据之后，其它对象的内存数据也会同时发生改变。
+引用是指同一块内存空间被交给不同的对象进行操作，当一个对象修改了数据后，另一个对象的数据也会发生改变。
 
 \vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
-a = {1:[1, 2, 3]}
+a = {1: [1, 2, 3]}
 b = a
 \end{lstlisting}
 
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
-        \draw (0,0) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,1);
+        \draw (0,0) rectangle node{\{1: \textcolor{blue}{[1, 2, 3]}\}} (2.5,1);
         \draw (-2,1.5) circle(0.5) node{a};
         \draw (-2,-0.5) circle(0.5) node{b};
         \draw (3,-2) rectangle node{\textcolor{blue}{[1, 2, 3]}} (5,-1);
@@ -97,45 +86,48 @@ b = a
 
 \vspace{0.5cm}
 
-\mybox{引用传递}
+\mybox{引用}
 
 \begin{lstlisting}[language=Python]
-def main():
-    info = dict(name="小灰", age=16, skills=["Python", "C/C++"])
-    copy_info = info        # 引用传递
-    copy_info["skills"].append("Java")
-    print(info)
-
-if __name__ == "__main__":
-    main()
+info = dict(name="Alice", skills=["Python", "C"])
+info_ref = info
+info_ref["skills"].append("Java")
+print(info)
 \end{lstlisting}
 
 \begin{tcolorbox}
     \mybox{运行结果}
     \begin{verbatim}
-{'name':'小灰', 'age':16, 'skills':['Python', 'C/C++', 'Java']}
+{'name': 'Alice', 'skills': ['Python', 'C', 'Java']}
 \end{verbatim}
 \end{tcolorbox}
 
 \vspace{0.5cm}
 
-\subsection{浅拷贝}
+\subsection{copy}
 
-拷贝和引用传递是不同的，拷贝是将原始的内存的数据进行一份复制，而后为其分配单独的对象的指向。
+copy模块提供了拷贝对象的功能。
+
+copy是一个专门进行内容拷贝的模块。拷贝分为浅拷贝（shallow copy）和深拷贝（deep copy）：
+
+\begin{enumerate}
+    \item 浅拷贝：只拷贝父对象，不会拷贝对象的内部的子对象。
+    \item 深拷贝：完全拷贝父对象及其子对象。
+\end{enumerate}
 
 \vspace{-0.5cm}
 
 \begin{lstlisting}[language=Python]
-a = {1:[1, 2, 3]}
+a = {1: [1, 2, 3]}
 b = a.copy()
 \end{lstlisting}
 
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
-        \draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
+        \draw (0,1) rectangle node{\{1: \textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
         \draw (-2,1.5) circle(0.5) node{a};
-        \draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
+        \draw (0,-1) rectangle node{\{1: \textcolor{red}{[1, 2, 3]}\}} (2.5,0);
         \draw (-2,-0.5) circle(0.5) node{b};
         \draw (4,0) rectangle node{[1, 2, 3]} (6,1);
 
@@ -154,43 +146,36 @@ b = a.copy()
 \begin{lstlisting}[language=Python]
 import copy
 
-def main():
-    info = dict(name="小灰", age=16, skills=["Python", "C/C++"])
-    copy_info = copy.copy(info)     # 浅拷贝
-    copy_info.pop("age")
-    copy_info["skills"].append("Java")
-    print(info)
-    print(copy_info)
+info = dict(name="Alice", skills=["Python", "C"])
+info_copy = copy.copy(info)
+info.pop("name")
+info_copy["skills"].append("Java")
 
-if __name__ == "__main__":
-    main()
+print(info)
+print(info_copy)
 \end{lstlisting}
+
+\newpage
 
 \begin{tcolorbox}
     \mybox{运行结果}
     \begin{verbatim}
-{'name':'小灰', 'age':16, 'skills':['Python', 'C/C++', 'Java']}
-{'name':'小灰', 'skills':['Python', 'C/C++', 'Java']}
+{'skills': ['Python', 'C', 'Java']}
+{'name': 'Alice', 'skills': ['Python', 'C', 'Java']}
 \end{verbatim}
 \end{tcolorbox}
 
-\vspace{0.5cm}
-
-\subsection{深拷贝}
-
-\vspace{-0.5cm}
-
 \begin{lstlisting}[language=Python]
-a = {1:[1, 2, 3]}
+a = {1: [1, 2, 3]}
 b = copy.deepcopy(a)
 \end{lstlisting}
 
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}
-        \draw (0,1) rectangle node{\{1:\textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
+        \draw (0,1) rectangle node{\{1: \textcolor{blue}{[1, 2, 3]}\}} (2.5,2);
         \draw (-2,1.5) circle(0.5) node{a};
-        \draw (0,-1) rectangle node{\{1:\textcolor{red}{[1, 2, 3]}\}} (2.5,0);
+        \draw (0,-1) rectangle node{\{1: \textcolor{red}{[1, 2, 3]}\}} (2.5,0);
         \draw (-2,-0.5) circle(0.5) node{b};
         \draw (4,0) rectangle node{\textcolor{blue}{[1, 2, 3]}} (6,1);
         \draw (4,-2) rectangle node{\textcolor{red}{[1, 2, 3]}} (6,-1);
@@ -210,83 +195,76 @@ b = copy.deepcopy(a)
 \begin{lstlisting}[language=Python]
 import copy
 
-def main():
-    info = dict(name="小灰", age=16, skills=["Python", "C/C++"])
-    copy_info = copy.deepcopy(info)     # 深拷贝
-    copy_info.pop("age")
-    copy_info["skills"].append("Java")
-    print(info)
-    print(copy_info)
+info = dict(name="Alice", skills=["Python", "C"])
+info_copy = copy.deepcopy(info)
+info.pop("name")
+info_copy["skills"].append("Java")
 
-if __name__ == "__main__":
-    main()
+print(info)
+print(info_copy)
 \end{lstlisting}
 
 \begin{tcolorbox}
     \mybox{运行结果}
     \begin{verbatim}
-{'name': '小灰', 'age': 16, 'skills': ['Python', 'C/C++']}
-{'name': '小灰', 'skills': ['Python', 'C/C++', 'Java']}
+{'skills': ['Python', 'C']}
+{'name': 'Alice', 'skills': ['Python', 'C', 'Java']}
 \end{verbatim}
 \end{tcolorbox}
 
 \newpage
 
-\section{MapReduce数据处理}
+\section{MapReduce}
 
 \subsection{MapReduce}
 
-Python在数据分析领域上使用非常广泛，并且实现简单。在Python中可以进行大量数据的快速处理，进行数据的过滤、分析操作。在数据量小的情况下可以方便地使用for循环进行数据的逐个处理，但是在数据量大的情况下，就需要使用一些特定的处理函数进行过滤、分析、统计等操作。\\
-
-在Python中默认提供有了filter()、map()，但是要进行统计处理，则需要导入reduce()。
+MapReduce在数据处理中可以用于大规模的数据过滤、分析、统计等操作。\\
 
 \begin{table}[H]
     \centering
     \setlength{\tabcolsep}{5mm}{
         \begin{tabular}{|l|l|}
             \hline
-            \textbf{函数}              & \textbf{功能}            \\
+            \textbf{函数} & \textbf{功能}      \\
             \hline
-            filter(function, sequence) & 对传入的序列数据进行过滤 \\
+            filter()      & 过滤序列           \\
             \hline
-            map(function, sequence)    & 对传入的序列数据进行处理 \\
+            map()         & 对序列数据进行处理 \\
             \hline
-            reduce(function, sequence) & 对传入的序列数据进行统计 \\
+            reduce()      & 对序列数据进行统计 \\
             \hline
         \end{tabular}
     }
     \caption{MapReduce数据处理函数}
 \end{table}
 
-在进行数据处理的过程之中都需要有一个处理函数，这个处理函数就定义了数据该如何进行处理或统计，一般而言这样的函数都比较短，所以大部分情况下都可以利用lambda函数来完成。\\
+在数据处理的过程中需要一个处理函数，用于指定数据如何进行处理或统计，一般而言这样的函数都比较短，所以大部分情况下都可以利用lambda函数来完成。\\
 
-\mybox{MapReduce数据处理}
+\mybox{奇数平方和}
 
 \begin{lstlisting}[language=Python]
 from functools import reduce
 
-def main():
-    lst = list(range(10))
+lst = list(range(10))
+print("lst =", lst)
 
-    filter_lst = list(filter(lambda x: x % 2 ==0, lst))
-    print("过滤出偶数：%s" % filter_lst)
+odds = list(filter(lambda x: x % 2 == 1, lst))
+print("odds =", odds)
 
-    map_lst = list(map(lambda x: x ** 2, filter_lst))
-    print("平方：%s" % map_lst)
+squares = list(map(lambda x: x ** 2, odds))
+print("squares =", squares)
 
-    result = reduce(lambda x, y: x+y, map_lst)
-    print("求和：%d" % result)
-
-if __name__ == "__main__":
-    main()
+sum = reduce(lambda x, y: x + y, squares)
+print("sum =", sum)
 \end{lstlisting}
 
 \begin{tcolorbox}
     \mybox{运行结果}
     \begin{verbatim}
-过滤出偶数：[0, 2, 4, 6, 8]
-平方：[0, 4, 16, 36, 64]
-求和：120
+lst = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+odds = [1, 3, 5, 7, 9]
+squares = [1, 9, 25, 49, 81]
+sum = 165
 \end{verbatim}
 \end{tcolorbox}
 
@@ -296,28 +274,26 @@ if __name__ == "__main__":
 
 \subsection{pip}
 
-Python本地有一些系统模块开发者可以直接进行使用，但是开发者仅仅是依靠系统模块是不够的，需要大量的使用第三方模块。为了解决这些模块的管理问题，在Python中内置了pip管理工具。通过此工具可以直接连接到Python远程服务模块仓库，通过仓库下载所需要的模块。\\
-
-在Python安装的时候会自动进行pip工具的相关安装，输入pip --help查看pip的相关命令选项。
+除了Python内置的模块，开发者还可以安装由社区开发并维护的第三方模块。pip管理工具可以用于安装、卸载、更新第三方模块。\\
 
 \begin{table}[H]
     \centering
     \setlength{\tabcolsep}{5mm}{
         \begin{tabular}{|l|l|}
             \hline
-            \textbf{功能}  & \textbf{命令}                \\
+            \textbf{功能}  & \textbf{命令}                  \\
             \hline
-            搜索模块       & pip search 模块名            \\
+            搜索模块       & pip search [module]            \\
             \hline
-            安装模块       & pip install 模块名           \\
+            安装模块       & pip install [module]           \\
             \hline
-            查看已安装模块 & pip list                     \\
+            查看已安装模块 & pip list                       \\
             \hline
-            列出过期模块   & pip list --outdated          \\
+            列出过期模块   & pip list --outdated            \\
             \hline
-            更新模块       & pip install --upgrade 模块名 \\
+            更新模块       & pip install --upgrade [module] \\
             \hline
-            卸载模块       & pip uninstall 模块名         \\
+            卸载模块       & pip uninstall [module]         \\
             \hline
         \end{tabular}
     }
@@ -328,58 +304,78 @@ Python本地有一些系统模块开发者可以直接进行使用，但是开�
 
 \subsection{jieba}
 
-分词是一种数学的应用，它可以直接根据词语之间的数学关系进行文字或单词的抽象。例如对“中华人民共和国”进行分词处理，可以拆分为“中华”、“华人”、“人民”、“共和”、“共和国”、“中华人民共和国”。如果没有分词，就无法进行搜索引擎的开发。\\
+jieba是一个在中文自然语言处理中较为常用的工具包之一，用于将中文文本分割成词语。\\
 
-jieba是在中文自然语言处理中用得最多的工具包之一，它以分词起家，目前已经能够实现包括分词、词性标注以及命名实体识别等多种功能。\\
-
-考虑到分词的效果与性能，在jieba组件中提供有3种分词模式：
+jieba支持三种分词模式：
 
 \begin{enumerate}
-    \item 精确模式：将句子进行最精确的切分，分词速度相对较低。
-
-    \item 全模式：基于词汇列表将句子中所有可以成词的词语都扫描出来，该模式处理速度非常快，但是不能有效解决歧义的问题。
-
-    \item 搜索引擎模式：在精确模式的基础上，对长词进行再次切分，该模式适用于搜索引擎构建索引的分词。
+    \item 精确模式：最精确的切分，但是速度较慢。
+    \item 全模式：扫描出所有可以成词的词语，速度非常快，但是不能有效解决歧义。
+    \item 搜索引擎模式：在精确模式的基础上，对长词进行再次切分，适用于搜索引擎分词。
 \end{enumerate}
 
 \vspace{0.5cm}
 
-\mybox{统计《西游记》中出现次数最多的20个词语}
+\mybox{词频统计}
 
 \begin{lstlisting}[language=Python]
 import jieba
 
-PATH = "西游记.txt"     # 文件路径
+FILENAME = "西游记.txt"
+
+def read_file(FILENAME):
+    with open(file=FILENAME, mode="r", encoding="UTF-8") as file:
+        return file.readlines()
+
+def word_frequency(text, n=10):
+    frequency = {}
+
+    for line in text:
+        words = jieba.lcut(line)
+        for word in words:
+            if len(word) == 1:
+                continue
+            
+            frequency[word] = frequency.get(word, 0) + 1
+
+    items = list(frequency.items())
+    items.sort(key=lambda x: x[1], reverse=True)
+    return items[:n]
 
 def main():
-    word_frequence = {}     # 词频表
-
-    # 打开文件
-    with open(file=PATH, mode="r", encoding="UTF-8") as file:
-        line = file.readline()  # 读取一行数据
-        while line:
-            words = jieba.lcut(line)    # 分词
-            for word in words:
-                if len(word) == 1:  # 舍弃长度为1的词
-                    continue
-                else:
-                    # dict.get(key, default=None)
-                    word_frequence[word] 
-                        = word_frequence.get(word, 0) + 1
-            line = file.readline()
-
-        # 获取所有数据项
-        items = list(word_frequence.items())
-        # 根据出现次数降序排序
-        items.sort(key=lambda x: x[1], reverse=True)
-
-        # 取前20项
-        for i in range(20):
-            word, count = items[i]
-            print("%s: %s" % (word, count))
-
+    text = read_file(FILENAME)
+    frequency = word_frequency(text, 20)
+    for i, item in enumerate(frequency):
+        print("No.%2d: %s - %d" % (i + 1, item[0], item[1]))
+    
 if __name__ == "__main__":
     main()
 \end{lstlisting}
+
+\begin{tcolorbox}
+    \mybox{运行结果}
+    \begin{verbatim}
+No. 1: 行者 - 4078
+No. 2: 八戒 - 1677
+No. 3: 师父 - 1604
+No. 4: 三藏 - 1324
+No. 5: 一个 - 1089
+No. 6: 大圣 - 889
+No. 7: 唐僧 - 802
+No. 8: 那里 - 767
+No. 9: 怎么 - 754
+No.10: 菩萨 - 730
+No.11: 我们 - 725
+No.12: 沙僧 - 721
+No.13: 不知 - 657
+No.14: 和尚 - 644
+No.15: 妖精 - 631
+No.16: 两个 - 594
+No.17: 甚么 - 551
+No.18: 长老 - 512
+No.19: 不是 - 507
+No.20: 只见 - 485
+\end{verbatim}
+\end{tcolorbox}
 
 \newpage
