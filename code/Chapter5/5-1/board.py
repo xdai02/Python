@@ -1,9 +1,9 @@
-def print_board(row, col):
-    for i in range(row):
-        for j in range(col - 1):
+def print_board():
+    for i in range(3):
+        for j in range(2):
             print("   |", end='')
         print()
-        if i < row - 1:
+        if i < 2:
             print("---+---+---")
 
-print_board(3, 3)
+print_board()
