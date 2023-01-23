@@ -1,255 +1,165 @@
-\chapter{文件操作}
+\chapter{文件}
 
-\section{文件操作}
+\section{文件I/O}
 
-\subsection{文件操作}
+\subsection{open()}
 
-计算机对于数据的存储一般可以通过文件的形式来完成。Python中直接提供有文件的I/O（Input/Output）处理函数操作，能够方便地实现读取和写入。\\
+文件是存储数据的一种常用方式，程序可以从文件中读取和写入数据，从而实现对数据的持久化存储。\\
 
-open()的功能是进行文件的打开，在进行文件打开的时候如果不设置任何的模式类型，则默认为r（只读模式）。
-
-\vspace{-0.5cm}
-
-\begin{lstlisting}[language=Python]
-def open(file, mode='r', buffering=None, encoding=None,
-    	errors=None, newline=None, closefd=True
-)
-\end{lstlisting}
+在对文件进行操作之前，首先需要使用open()函数打开文件，open()函数可以指定要打开的文件名和打开方式。\\
 
 \begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{5mm}{
-		\begin{tabular}{|c|l|}
-			\hline
-			\textbf{打开模式} & \textbf{功能}                                  \\
-			\hline
-			r                 & 使用只读模式打开文件，此为默认模式             \\
-			\hline
-			w                 & 写模式，如果文件存在则覆盖，文件不存在则创建   \\
-			\hline
-			x                 & 写模式，新建一个文件，如果该文件已存在则会报错 \\
-			\hline
-			a                 & 内容追加模式                                   \\
-			\hline
-			b                 & 二进制模式                                     \\
-			\hline
-			t                 & 文本模式（默认）                               \\
-			\hline
-			+                 & 打开一个文件进行更新（可读可写）               \\
-			\hline
-		\end{tabular}
-	}
-	\caption{文件打开模式}
+    \centering
+    \setlength{\tabcolsep}{5mm}{
+        \begin{tabular}{|c|l|}
+            \hline
+            \textbf{打开方式} & \textbf{功能}                                      \\
+            \hline
+            r                 & 只读，文件必须存在，否则打开失败                   \\
+            \hline
+            w                 & 只写，创建一个新文件                               \\
+            \hline
+            a                 & 追加，如果文件不存在则创建；存在则将数据追加到末尾 \\
+            \hline
+            r+                & 以r模式打开文件，附带写的功能                      \\
+            \hline
+            w+                & 以w模式打开文件，附带读的功能                      \\
+            \hline
+            a+                & 以a模式打开文件，附带读的功能                      \\
+            \hline
+        \end{tabular}
+    }
+    \caption{文件打开方式}
 \end{table}
 
-如果以只读的模式打开文件，并且文件路径不存在的话，就会出现FileNotFoundError的错误信息。\\
+在对文件操作完成之后，需要调用close()函数关闭文件。采用with语句可以实现对资源的自动释放，不需要手动调用close()函数。\\
 
-\mybox{文件操作}
+\subsection{文件I/O}
 
-\begin{lstlisting}[language=Python]
-def main():
-	file = open(file="test.txt", mode="w")
-	print("文件名称：%s" % file.name)
-	print("访问模式：%s" % file.mode)
-	print("文件状态：%s" % file.closed)
-	print("关闭文件...")
-	file.close()
-	print("文件状态：%s" % file.closed)
+通过文件的方法可以对文件的I/O操作。\\
 
-if __name__ == "__main__":
-	main()
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-文件名称：test.txt
-访问模式：w
-文件状态：False
-关闭文件...
-文件状态：True
-\end{verbatim}
-\end{tcolorbox}
+\begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{4mm}{
+        \begin{tabular}{|l|l|}
+            \hline
+            \textbf{方法} & \textbf{功能}                  \\
+            \hline
+            read()        & 默认读取全部，可设置读取个数   \\
+            \hline
+            readline      & 读取每行数据，可设置读取个数   \\
+            \hline
+            readlines     & 读取所有数据行，以列表形式返回 \\
+            \hline
+            write         & 写入数据                       \\
+            \hline
+            writelines    & 写入一组数据                   \\
+            \hline
+        \end{tabular}
+    }
+    \caption{文件I/O}
+\end{table}
 
 \vspace{0.5cm}
 
-\subsection{文件读写}
-
-当使用open()打开一个文件后，就可以使用创建的文件对象进行读写操作。
-
-\begin{table}[H]
-	\centering
-	\setlength{\tabcolsep}{4mm}{
-		\begin{tabular}{|l|l|}
-			\hline
-			\textbf{方法}                             & \textbf{功能}                  \\
-			\hline
-			def close(self)                           & 关闭文件资源                   \\
-			\hline
-			def flush(self)                           & 强制刷新缓冲区                 \\
-			\hline
-			def read(self, n: int = -1)               & 默认读取全部，也可设置读取个数 \\
-			\hline
-			def readlines(self, hint: int = -1)       & 读取所有数据行，以列表形式返回 \\
-			\hline
-			def readline(self, limit: int = -1)       & 读取每行数据，也可设置读取个数 \\
-			\hline
-			def write(self, s: AnyStr)                & 文件写入                       \\
-			\hline
-			def writelines(self, lines, List[AnyStr]) & 写入一组数据                   \\
-			\hline
-		\end{tabular}
-	}
-	\caption{文件读写}
-\end{table}
-
-既然所有的文件对象最终都需要被开发者关闭，那么可以结合with语句实现自动的关闭处理。通过with实现所有资源对象的连接和释放是在Python中编写资源操作的重要技术手段，通过这样的操作可以极大地减少和优化代码结构。\\
-
-使用读模式打开文件后，可以使用循环读取每一行的数据内容。Python在进行文件读取操作的时候也可以进一步简化操作。文件对象本身是可以迭代的，在迭代的时候是以换行符进行分割，每次迭代就读取到一行数据内容。\\
-
-\mybox{读取文件}
+\mybox{解析单词}
 
 \begin{lstlisting}[title=data.txt]
-小灰	16
-小白	17
-小黄	21
+Talk is cheap. Show me the code.
+Code never lies, comments sometimes do.
+Stay Hungry Stay Foolish
 \end{lstlisting}
-
-\begin{lstlisting}[language=Python, title=read\_file.py]
-def main():
-	with open(file="data.txt", mode="r", encoding="utf-8") as file:
-		for line in file:
-			print(line, end='')
-
-if __name__ == "__main__":
-	main()
-\end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-小灰	16
-小白	17
-小黄	21
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
-\mybox{写入文件}
 
 \begin{lstlisting}[language=Python]
-def main():
-	with open(file="data.txt", mode="w", encoding="utf-8") as file:
-		info = {"小灰": 16, "小白": 17, "小黄": 21}
-		for name, age in info.items():
-			file.write("%s\t%d\n" % (name, age))
+import string
 
-if __name__ == "__main__":
-	main()
+output_file = open("words.txt", "w")
+
+with open("data.txt") as file:
+    for line in file:
+        words = line.split()
+        for word in words:
+            word = word.strip(string.punctuation)
+            output_file.write(word + "\n")
+
+output_file.close()
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\textbf{data.txt}
-	\begin{verbatim}
-小灰	16
-小白	17
-小黄	21
-\end{verbatim}
+    \mybox{运行结果}
+    \textbf{words.txt}
+    \begin{verbatim}
+Talk
+is
+cheap
+Show
+me
+the
+code
+Code
+never
+lies
+comments
+sometimes
+do
+Stay
+Hungry
+Stay
+Foolish        
+	\end{verbatim}
 \end{tcolorbox}
 
 \newpage
 
-\section{csv模块}
+\section{csv}
 
-\subsection{csv文件}
+\subsection{csv}
 
-CSV （Comma-Separated Values，逗号分隔值/字符分隔值）是一种文件的格式，在该类型的文件里面一般会保存多个数据信息的内容，但是每一个数据信息一定都有各自的组成部分，用这样的文件进行数据采集内容的记录。CSV文件是跟人工智能和数据分析有直接联系的一种数据存储文件。\\
+CSV（Comma-Separated Values）是一种以纯文本方式进行数据记录的存储格式，每行数据使用逗号分隔。\\
 
-CSV是一种以纯文件方式进行数据记录的存储格式，在CSV文件内容使用不同的数据行记录数据的内容，每行数据使用特定的符号（一般是逗号）进行数据项的拆分，这样就形成了一种相对简单且通用的数据格式。在实际开发中利用CSV数据格式可以方便实现大数据系统中对于数据采集结果的信息记录，也可以方便进行数据文件的传输，同时CSV文件格式也可以被Excel工具所读取。\\
+利用CSV数据格式可以方便实现大数据系统中对于数据采集结果的信息记录和传输，同时CSV文件也可以使用Excel查看。\\
 
-CSV文件是可以通过Excel工具打开的，当一个CSV文件被创建之后，在Windows系统中会自动和Excel软件进行关联。\\
+\mybox{邮箱}
 
-\subsection{csv读写操作}
-
-在Python中直接提供有csv模块，利用这个模块可以方便地实现数据的写入和读取操作，在CSV文件内容一般对于不同的数据项都要使用逗号分隔。除了数据之外，在CSV文件内容还可以设置文件标题。\\
-
-\mybox{写入csv文件}
-
-\begin{lstlisting}[language=Python]
-import csv
-import random
-
-HEADER = ["Location", "Longitude", "Latitude"]
-
-def main():
-    # 如果不使用newline，那么每行记录之间就会多出一个空行
-    with open(file="location.csv", mode="w", 
-                newline="", encoding="utf-8") as file:
-        csv_writer = csv.writer(file)       # 创建csv写入对象
-        csv_writer.writerow(HEADER)         # 写入头部信息
-        for i in range(1, 11):
-            longitude = round(random.random() * 180, 3)   # [0, 180)
-            latitude = round(random.random() * 90, 3)     # [0, 90)
-            csv_writer.writerow(["loc-%d" % i, longitude, latitude])
-
-if __name__ == "__main__":
-    main()
+\begin{lstlisting}[language=Python, title=user\_info.csv]
+ID,First Name,Last Name
+9012,Rachel,Booker
+2070,Laura,Grey
+4081,Craig,Johnson
+9346,Mary,Jenkins
+5079,Jamie,Smith
 \end{lstlisting}
-
-\begin{tcolorbox}
-	\mybox{运行结果}
-	\textbf{location.csv}
-	\begin{verbatim}
-Location,Longitude,Latitude
-loc-1,176.165,35.458
-loc-2,12.729,56.247
-loc-3,6.605,45.14
-loc-4,15.123,53.435
-loc-5,131.984,11.927
-loc-6,155.038,35.681
-loc-7,98.772,15.125
-loc-8,70.991,30.328
-loc-9,152.967,30.372
-loc-10,96.362,76.798
-\end{verbatim}
-\end{tcolorbox}
-
-\vspace{0.5cm}
-
-\mybox{读取csv文件}
 
 \begin{lstlisting}[language=Python]
 import csv
 
-def main():
-    with open(file="location.csv", mode="r", 
-                newline="", encoding="utf-8") as file:
-        csv_reader = csv.reader(file)   # 创建csv读取对象
-        header = next(csv_reader)       # 读取标题行
-        print(header)
-        for row in csv_reader:
-            print(row)
+with open("user_info.csv", "r") as file:
+    reader = csv.reader(file)
+    next(reader)
+    user_info = list(reader)
 
-if __name__ == "__main__":
-    main()
+with open("user_email.csv", "w", newline="\n") as file:
+    writer = csv.writer(file)
+    writer.writerow(["ID", "First Name", "Last Name", "Email"])
+    for user in user_info:
+        id, first_name, last_name = user
+
+        writer.writerow([
+            id, first_name, last_name,
+            (last_name[0] + first_name + id + "@gmail.com").lower()
+        ])
 \end{lstlisting}
 
 \begin{tcolorbox}
-	\mybox{运行结果}
-	\begin{verbatim}
-['Location', 'Longitude', 'Latitude']
-['loc-1', '176.165', '35.458']
-['loc-2', '12.729', '56.247']
-['loc-3', '6.605', '45.14']
-['loc-4', '15.123', '53.435']
-['loc-5', '131.984', '11.927']
-['loc-6', '155.038', '35.681']
-['loc-7', '98.772', '15.125']
-['loc-8', '70.991', '30.328']
-['loc-9', '152.967', '30.372']
-['loc-10', '96.362', '76.798']
+    \mybox{运行结果}
+    \textbf{user\_email.csv}
+    \begin{verbatim}
+ID,First Name,Last Name,Email
+9012,Rachel,Booker,brachel9012@gmail.com
+2070,Laura,Grey,glaura2070@gmail.com
+4081,Craig,Johnson,jcraig4081@gmail.com
+9346,Mary,Jenkins,jmary9346@gmail.com
+5079,Jamie,Smith,sjamie5079@gmail.com
 \end{verbatim}
 \end{tcolorbox}
 
