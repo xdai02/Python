@@ -47,13 +47,13 @@
             \hline
             read()        & 默认读取全部，可设置读取个数   \\
             \hline
-            readline      & 读取每行数据，可设置读取个数   \\
+            readline()    & 读取每行数据，可设置读取个数   \\
             \hline
-            readlines     & 读取所有数据行，以列表形式返回 \\
+            readlines()   & 读取所有数据行，以列表形式返回 \\
             \hline
-            write         & 写入数据                       \\
+            write()       & 写入数据                       \\
             \hline
-            writelines    & 写入一组数据                   \\
+            writelines()  & 写入一组数据                   \\
             \hline
         \end{tabular}
     }
@@ -64,7 +64,7 @@
 
 \mybox{解析单词}
 
-\begin{lstlisting}[title=data.txt]
+\begin{lstlisting}[title=quotes.txt]
 Talk is cheap. Show me the code.
 Code never lies, comments sometimes do.
 Stay Hungry Stay Foolish
@@ -73,9 +73,9 @@ Stay Hungry Stay Foolish
 \begin{lstlisting}[language=Python]
 import string
 
-output_file = open("words.txt", "w")
+output_file = open("quotes.txt", "w")
 
-with open("data.txt") as file:
+with open("words.txt") as file:
     for line in file:
         words = line.split()
         for word in words:
@@ -105,7 +105,7 @@ do
 Stay
 Hungry
 Stay
-Foolish        
+Foolish
 	\end{verbatim}
 \end{tcolorbox}
 
@@ -121,7 +121,7 @@ CSV（Comma-Separated Values）是一种以纯文本方式进行数据记录的�
 
 \mybox{邮箱}
 
-\begin{lstlisting}[language=Python, title=user\_info.csv]
+\begin{lstlisting}[title=user\_info.csv]
 ID,First Name,Last Name
 9012,Rachel,Booker
 2070,Laura,Grey
