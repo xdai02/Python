@@ -2,7 +2,7 @@ import string
 
 output_file = open("words.txt", "w")
 
-with open("data.txt") as file:
+with open("quotes.txt") as file:
     for line in file:
         words = line.split()
         for word in words:
